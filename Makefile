@@ -13,17 +13,34 @@ OBJDIR		=	obj
 LIBFTDIR	=	libft
 SRCDIR		=	src
 HEADERDIR	=	headers
+TESTDIR		=	Tests
+
+vpath %.c $(SRCDIR) $(SRCDIR)/lexer/ $(TESTDIR)
 
 #Libs
 LIBFT	=	libft.a
 LIBS	=	-L$(LIBFTDIR) -lft -lreadline
 
-vpath %.c $(SRCDIR) $(SRCDIR)/parsing
+#TEST
+TEST	=	test
 
+#FILES
+FILES = lexer.c\
+		utils_lexer.c
+
+TEST_FILES = $(FILES)\
+			 lexer_tests.c
+
+SRC = main.c $(FILES)
+
+
+#INCLUDES
 HEADERDIR_LIBFT	= $(LIBFTDIR)/headers
 HEADERS	= -I$(HEADERDIR) -I$(HEADERDIR_LIBFT)
-SRC = main.c
+
+#OBJECTS
 OBJ = $(SRC:%.c=$(OBJDIR)/%.o)
+OBJ_TEST = $(TEST_FILES:%.c=$(OBJDIR)/%.o)
 
 all:	$(NAME)
 
@@ -45,8 +62,14 @@ clean:
 
 fclean: clean
 	$(RM) $(NAME)
+	$(RM) $(TEST)
 	$(MAKE) fclean -C $(LIBFTDIR)
 
 re: fclean all
 
-.PHONY: all re fclean clean
+test: $(LIBFT) $(OBJ_TEST)
+	$(CC) $(HEADERS) $(OBJ_TEST) -o $(TEST) $(LIBS) -lcriterion
+	@./$(TEST)
+	@$(MAKE) fclean >  /dev/null
+
+.PHONY: all re fclean clean test
