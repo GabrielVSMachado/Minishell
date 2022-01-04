@@ -18,6 +18,7 @@
 # include <string.h>
 # include <dirent.h>
 # include <curses.h>
+# include <lexer.h>
 # include <sys/wait.h>
 # include <sys/ioctl.h>
 # include <readline/history.h>
