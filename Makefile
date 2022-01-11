@@ -1,6 +1,7 @@
 NAME	= minishell
 RM		= rm -rf
 ARCH	:= $(findstring Arch,$(file < /etc/os-release))
+CFLAGS	= -Wall -Wextra -Werror -g
 
 ifeq ($(ARCH),Arch)
 	CC	=	gcc
@@ -15,7 +16,7 @@ SRCDIR		=	src
 HEADERDIR	=	headers
 TESTDIR		=	Tests
 
-vpath %.c $(SRCDIR) $(SRCDIR)/lexer/ $(TESTDIR)
+vpath %.c $(SRCDIR) $(SRCDIR)/builtins/ $(TESTDIR)
 
 #Libs
 LIBFT	=	libft.a
@@ -25,11 +26,10 @@ LIBS	=	-L$(LIBFTDIR) -lft -lreadline
 TEST	=	test
 
 #FILES
-FILES = lexer.c\
-		utils_lexer.c
+FILES = pwd.c
 
 TEST_FILES = $(FILES)\
-			 lexer_tests.c
+			 pwd_test.c
 
 SRC = main.c $(FILES)
 
@@ -45,10 +45,10 @@ OBJ_TEST = $(TEST_FILES:%.c=$(OBJDIR)/%.o)
 all:	$(NAME)
 
 $(NAME): $(LIBFT) $(OBJ)
-	$(CC) $(HEADERS) $(OBJ) -o $@ $(LIBS)
+	$(CC) $(HEADERS) $(CFLAGS) $(OBJ) -o $@ $(LIBS)
 
 $(OBJDIR)/%.o: %.c $(OBJDIR)
-	$(CC) $(HEADERS) -c $< -o $@
+	$(CC) $(HEADERS) $(CFLAGS) -c $< -o $@
 
 $(OBJDIR):
 	mkdir -p $@
