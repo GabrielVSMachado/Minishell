@@ -15,10 +15,10 @@
 
 # include <term.h>
 # include <libft.h>
+# include <errno.h>
 # include <string.h>
 # include <dirent.h>
 # include <curses.h>
-# include <lexer.h>
 # include <sys/wait.h>
 # include <sys/ioctl.h>
 # include <readline/history.h>
@@ -27,4 +27,5 @@
 typedef int	t_pid;
 typedef int	t_fd;
 
+int	pwd(void);
 #endif
