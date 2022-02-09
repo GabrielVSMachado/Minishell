@@ -16,7 +16,7 @@ SRCDIR		=	src
 HEADERDIR	=	headers
 TESTDIR		=	Tests
 
-vpath %.c $(SRCDIR) $(SRCDIR)/builtins/ $(TESTDIR)
+vpath %.c $(SRCDIR) $(SRCDIR)/builtins $(SRCDIR)/tokenizer $(TESTDIR)
 
 #Libs
 LIBFT	=	libft.a
@@ -26,10 +26,11 @@ LIBS	=	-L$(LIBFTDIR) -lft -lreadline
 TEST	=	test
 
 #FILES
-FILES = pwd.c
+FILES = linkedl_tokenizer.c
 
 TEST_FILES = $(FILES)\
-			 pwd_test.c
+			 pwd_test.c\
+			 utils_tokenizer.c
 
 SRC = main.c $(FILES)
 
