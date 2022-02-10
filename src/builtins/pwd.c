@@ -10,7 +10,11 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <minishell.h>
+#include <stdlib.h>
+#include <libft.h>
+#include <string.h>
+#include <errno.h>
+#include <limits.h>
 
 static char	*get_cwd(void)
 {

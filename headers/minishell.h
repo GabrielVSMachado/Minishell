@@ -13,19 +13,5 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-# include <term.h>
-# include <libft.h>
-# include <errno.h>
-# include <string.h>
-# include <dirent.h>
-# include <curses.h>
-# include <sys/wait.h>
-# include <sys/ioctl.h>
-# include <readline/history.h>
-# include <readline/readline.h>
-
-typedef int	t_pid;
-typedef int	t_fd;
-
 int	pwd(void);
 #endif

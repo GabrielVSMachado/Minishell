@@ -13,8 +13,6 @@
 #ifndef TOKENIZER_H
 # define TOKENIZER_H
 
-# include <stdlib.h>
-
 struct s_tokens
 {
 	unsigned int	token;
@@ -25,6 +23,10 @@ struct s_tokens
 enum	e_tokens
 {
 	T_WORD,
+	T_RINPUT,
+	T_ROUTPUT,
+	T_RAOUTPUT,
+	T_HEARDOC,
 };
 
 void			add_back_token(struct s_tokens **head, struct s_tokens *new);

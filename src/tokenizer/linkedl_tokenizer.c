@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "tokenizer.h"
+#include <stdlib.h>
 
 struct s_tokens	*new_token(char *content, unsigned int token)
 {

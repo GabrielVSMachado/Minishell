@@ -10,7 +10,10 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <minishell.h>
+#include <stdio.h>
+#include "libft.h"
+#include <readline/history.h>
+#include <readline/readline.h>
 
 int	main(void)
 {
