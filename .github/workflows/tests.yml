@@ -25,9 +25,9 @@ jobs:
       - name: install criterion
         run: |
           tar -xf $CRITERION_NAME_TAR
-          mv $CRITERION_NAME_FOLDER/include/* /usr/include/
-          mv $CRITERION_NAME_FOLDER/share/* /usr/share/
-          mv $CRITERION_NAME_FOLDER/lib/* /usr/lib/
+          sudo mv $CRITERION_NAME_FOLDER/include/* /usr/include/
+          sudo mv $CRITERION_NAME_FOLDER/share/* /usr/share/
+          sudo mv $CRITERION_NAME_FOLDER/lib/* /usr/lib/
           rm -rf $CRITERION_NAME_FOLDER $CRITERION_NAME_TAR
 
       - name: Run Tests
