@@ -16,10 +16,14 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - name: setup criterion
+
+      - name: get criterion
+        uses: wei/wget@v1
+        with:
+          args: -O $CRITERION_NAME_TAR $CRITERION_LINK
+
+      - name: install criterion
         run: |
-          apt install -y wget
-          wget -O $CRITERION_NAME_TAR $CRITERION_LINK
           tar -xf $CRITERION_NAME_TAR
           mv $CRITERION_NAME_FOLDER/include/* /usr/include/
           mv $CRITERION_NAME_FOLDER/share/* /usr/share/
