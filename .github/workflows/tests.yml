@@ -30,5 +30,9 @@ jobs:
           sudo mv $CRITERION_NAME_FOLDER/lib/* /usr/lib/
           rm -rf $CRITERION_NAME_FOLDER $CRITERION_NAME_TAR
 
+      - name: init submodule
+        run: |
+          git submodule update --init
+
       - name: Run Tests
         run: make test
