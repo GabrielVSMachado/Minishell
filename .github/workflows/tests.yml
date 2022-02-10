@@ -1,0 +1,30 @@
+name: Tests
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    env:
+      CRITERION_LINK: https://github.com/Snaipe/Criterion/releases/download/v2.3.3/criterion-v2.3.3-linux-x86_64.tar.bz2
+      CRITERION_NAME_TAR: criterion.tar.bz2
+      CRITERION_NAME_FOLDER: criterion-v2.3.3
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: setup criterion
+        run: |
+          apt install -y wget
+          wget -O $CRITERION_NAME_TAR $CRITERION_LINK
+          tar -xf $CRITERION_NAME_TAR
+          mv $CRITERION_NAME_FOLDER/include/* /usr/include/
+          mv $CRITERION_NAME_FOLDER/share/* /usr/share/
+          mv $CRITERION_NAME_FOLDER/lib/* /usr/lib/
+          rm -rf $CRITERION_NAME_FOLDER $CRITERION_NAME_TAR
+
+      - name: Run Tests
+        run: make test
