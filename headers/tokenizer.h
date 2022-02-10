@@ -27,5 +27,7 @@ enum	e_tokens
 	T_WORD,
 };
 
+void			add_back_token(struct s_tokens **head, struct s_tokens *new);
 struct s_tokens	*new_token(char *content, unsigned int token);
+struct s_tokens	*last_token(struct s_tokens *head);
 #endif
