@@ -29,7 +29,6 @@ TEST	=	test
 FILES = linkedl_tokenizer.c
 
 TEST_FILES = $(FILES)\
-			 pwd_test.c\
 			 utils_tokenizer.c
 
 SRC = main.c $(FILES)
