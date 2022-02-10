@@ -26,7 +26,7 @@ jobs:
         run: |
           tar -xf $CRITERION_NAME_TAR
           sudo mv $CRITERION_NAME_FOLDER/include/* /usr/include/
-          sudo mv $CRITERION_NAME_FOLDER/share/* /usr/share/
+          sudo mv $CRITERION_NAME_FOLDER/share/pkgconfig/* /usr/share/pkgconfig/
           sudo mv $CRITERION_NAME_FOLDER/lib/* /usr/lib/
           rm -rf $CRITERION_NAME_FOLDER $CRITERION_NAME_TAR
 
