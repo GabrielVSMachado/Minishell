@@ -48,3 +48,18 @@ void	add_back_token(struct s_tokens **head, struct s_tokens *new)
 		last_token(*head)->next = new;
 	}
 }
+
+void	clear_tokens(struct s_tokens **head)
+{
+	struct s_tokens	*tmp;
+
+	while (*head != NULL)
+	{
+		tmp = (*head)->next;
+		(*head)->token = ((unsigned int) - 1);
+		free((*head)->value);
+		free(*head);
+		*head = tmp;
+	}
+	*head = NULL;
+}
