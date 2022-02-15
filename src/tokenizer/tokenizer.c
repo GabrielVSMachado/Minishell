@@ -12,6 +12,8 @@
 
 #include "tokenizer.h"
 #include "libft.h"
+#include "error.h"
+#include <stdio.h>
 
 static int	is_special(char	const c)
 {
@@ -35,11 +37,12 @@ static void	which_other_tokens(struct s_tokens **head, char const *line,
 			));
 }
 
-static void	treat_words(struct s_tokens **head, char const *line,
+static int	treat_words(struct s_tokens **head, char const *line,
 		unsigned int *cursor)
 {
 	unsigned int	counter;
 	unsigned char	c;
+	char			*next_quotes;
 
 	counter = *cursor + 1;
 	while (line[counter] != '\0' && !is_special(line[counter]))
@@ -48,13 +51,18 @@ static void	treat_words(struct s_tokens **head, char const *line,
 			+ ('\"' * (line[counter] == '\"'));
 		if (c != 0)
 		{	
-			counter += (ft_strchr(line + counter, c) - (line + counter));
+			next_quotes = ft_strchr(line + counter + 1, c);
+			if (next_quotes == NULL)
+				return (raise_tokenizer_err(
+						"bad format string: unclosed quotes", head));
+			counter += (next_quotes - (line + counter));
 		}
 		counter += 1;
 	}
 	add_back_token(head,
 		new_token(ft_substr(line, *cursor, counter - *cursor), T_WORD));
 	(*cursor) += counter;
+	return (0);
 }
 
 struct s_tokens	*tokenizer(char const *line)
@@ -69,7 +77,11 @@ struct s_tokens	*tokenizer(char const *line)
 		if (is_special(line[cursor]))
 			which_other_tokens(&head, line, &cursor);
 		else
-			treat_words(&head, line, &cursor);
+		{
+			if (treat_words(&head, line, &cursor) == -1)
+				return (NULL);
+			continue ;
+		}
 		cursor += 1;
 	}
 	return (head);
