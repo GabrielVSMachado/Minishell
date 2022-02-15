@@ -37,6 +37,8 @@ enum	e_tokens
 };
 
 void			add_back_token(struct s_tokens **head, struct s_tokens *new);
+void			clear_tokens(struct s_tokens **head);
 struct s_tokens	*new_token(char *content, unsigned int token);
 struct s_tokens	*last_token(struct s_tokens *head);
+struct s_tokens	*tokenizer(char const *line);
 #endif
