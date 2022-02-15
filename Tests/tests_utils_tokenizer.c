@@ -48,3 +48,14 @@ Test(add_back, expected_list_with_three_tokens)
 	free(node->next);
 	free(node);
 }
+
+Test(clear_tokens, expected_head_null) {
+	struct s_tokens	*head = NULL;
+
+	head = new_token(strdup("fuga"), T_WORD);
+	head->next = new_token(strdup("das"), T_WORD);
+	head->next = new_token(strdup("galinhas"), T_WORD);
+
+	clear_tokens(&head);
+	cr_assert(head == NULL, "head after clear_tokens is not NULL");
+}
