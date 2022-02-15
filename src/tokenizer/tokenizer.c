@@ -44,7 +44,7 @@ static int	treat_words(struct s_tokens **head, char const *line,
 	unsigned char	c;
 	char			*next_quotes;
 
-	counter = *cursor + 1;
+	counter = *cursor;
 	while (line[counter] != '\0' && !is_special(line[counter]))
 	{
 		c = ('\'' * (line[counter] == '\''))
