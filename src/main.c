@@ -12,17 +12,33 @@
 
 #include <stdio.h>
 #include "libft.h"
+#include "tokenizer.h"
 #include <readline/history.h>
 #include <readline/readline.h>
 
 int	main(void)
 {
-	char	*line;
+	char			*line;
+	struct s_tokens	*head;
 
+	head = NULL;
 	while (TRUE)
 	{
-		line = readline("gvitor-s/f-tadeu@42sp[ minishell ]$");
+		line = readline("gvitor-s/f-tadeu@42sp[ minishell ]$ ");
+		if (line == NULL)
+		{
+			clear_tokens(&head);
+			break ;
+		}
+		head = tokenizer(line);
+		printf("%s\n", head->value);
+		if (!head)
+		{
+			free(line);
+			continue ;
+		}
 		free(line);
+		clear_tokens(&head);
 	}
 	return (EXIT_SUCCESS);
 }
