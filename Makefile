@@ -16,7 +16,8 @@ SRCDIR		=	src
 HEADERDIR	=	headers
 TESTDIR		=	Tests
 
-vpath %.c $(SRCDIR) $(SRCDIR)/builtins $(SRCDIR)/tokenizer $(TESTDIR)
+vpath %.c $(SRCDIR) $(SRCDIR)/builtins $(SRCDIR)/tokenizer\
+	$(SRCDIR)/errors $(TESTDIR)
 
 #Libs
 LIBFT	=	libft.a
@@ -26,7 +27,9 @@ LIBS	=	-L$(LIBFTDIR) -lft -lreadline
 TEST	=	test
 
 #FILES
-FILES = utils_tokenizer.c
+FILES = utils_tokenizer.c\
+		tokenizer.c\
+		err.c
 
 TEST_FILES = $(FILES)\
 			 tests_utils_tokenizer.c\
