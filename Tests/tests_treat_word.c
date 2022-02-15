@@ -1,32 +1,43 @@
 #include <criterion/criterion.h>
 #include "libft.h"
 #include "tokenizer.h"
+#include "error.h"
+#include <unistd.h>
+#include <stdio.h>
+#include <string.h>
+#include <errno.h>
 
 static int	is_special(char	const c)
 {
 	return (ft_strchr("|&()><", c) != NULL);
 }
 
-static void	treat_words(struct s_tokens **head, char const *line,
+static int	treat_words(struct s_tokens **head, char const *line,
 		unsigned int *cursor)
 {
 	unsigned int	counter;
 	unsigned char	c;
+	char			*next_quotes;
 
-	counter = *cursor + 1;
+	counter = *cursor;
 	while (line[counter] != '\0' && !is_special(line[counter]))
 	{
 		c = ('\'' * (line[counter] == '\''))
-			| ('\"' * (line[counter] == '\"'));
+			+ ('\"' * (line[counter] == '\"'));
 		if (c != 0)
 		{	
-			counter += (ft_strchr(line + counter, c) - (line + counter));
+			next_quotes = ft_strchr(line + counter + 1, c);
+			if (next_quotes == NULL)
+				return (raise_tokenizer_err(
+						"bad format string: unclosed quotes", head));
+			counter += (next_quotes - (line + counter));
 		}
 		counter += 1;
 	}
 	add_back_token(head,
 		new_token(ft_substr(line, *cursor, counter - *cursor), T_WORD));
 	(*cursor) += counter;
+	return (0);
 }
 
 Test(treat_words, expected_llist_with_token_with_the_word_minishell) {
@@ -154,4 +165,16 @@ Test(treat_words,
 	cr_assert(cursor == strlen("\"mini shell\""), "Wrong cursor: %u\n", cursor);
 	free(head->value);
 	free(head);
+}
+
+Test(treat_words,
+		expected_head_is_null_when_has_unclosed_quotes_and_ret_is_negative) {
+	struct s_tokens	*head = NULL;
+	unsigned int	cursor = 0;
+	char const 		*line = "Mini'shell";
+	int				ret;
+
+	ret = treat_words(&head, line, &cursor);
+	cr_assert(ret == -1, "return is not negative when unclosed quotes");
+	cr_assert_null(head, "head is not null after unclosed quotes");
 }
