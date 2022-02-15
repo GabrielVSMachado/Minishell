@@ -19,7 +19,7 @@
 
 int	raise_tokenizer_err(char const *msg, struct s_tokens **info)
 {
-	if (*info != NULL)
+	if (info != NULL && *info != NULL)
 		clear_tokens(info);
 	ft_putendl_fd((char *)msg, STDERR_FILENO);
 	return (-1);
