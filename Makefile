@@ -71,7 +71,7 @@ fclean: clean
 
 re: fclean all
 
-test: $(LIBFT) $(OBJ_TEST)
+test: $(OBJDIR) $(LIBFT) $(OBJ_TEST)
 	$(CC) $(HEADERS) $(OBJ_TEST) -o $(TEST) $(LIBS) -lcriterion
 	@./$(TEST)
 	@$(MAKE) fclean >  /dev/null
