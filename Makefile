@@ -26,13 +26,14 @@ LIBS	=	-L$(LIBFTDIR) -lft -lreadline
 TEST	=	test
 
 #FILES
-FILES = utils_tokenizer.c\
+FILES = util_struct_tokens.c\
 		tokenizer.c\
 		err.c
 
 TEST_FILES = $(FILES)\
 			 tests_utils_tokenizer.c\
-			 tests_treat_word.c
+			 tests_treat_word.c\
+			 tests_tokenizer.c
 
 SRC = main.c\
 	  $(FILES)
