@@ -79,17 +79,21 @@ struct s_tokens	*tokenizer(char const *line)
 	unsigned int	cursor;
 
 	head = NULL;
-	cursor = -1;
-	while (line[++cursor] != '\0')
+	cursor = 0;
+	while (line[cursor] != '\0')
 	{
 		if (is_special(line[cursor]))
+		{
 			which_other_tokens(&head, line, &cursor);
-		else
+			continue ;
+		}
+		else if (NOT is_space(line[cursor]))
 		{
 			if (treat_words(&head, line, &cursor) == -1)
 				return (NULL);
 			continue ;
 		}
+		cursor += 1;
 	}
 	return (head);
 }
