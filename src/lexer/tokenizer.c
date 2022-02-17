@@ -38,8 +38,9 @@ static void	which_other_tokens(struct s_tokens **head, char const *line,
 			+ T_RAOUTPUT * (line[*cursor] == '>' && line[*cursor + 1] == '>')
 			+ T_RINPUT * (line[*cursor] == '<')
 			+ T_ROUTPUT * (line[*cursor] == '>')
-			+ T_HEREDOC * (line[*cursor] == '<' && line[*cursor] == '<')
+			+ T_HEREDOC * (line[*cursor] == '<' && line[*cursor + 1] == '<')
 			));
+	(*cursor) += 1;
 }
 
 static int	treat_words(struct s_tokens **head, char const *line,
