@@ -48,7 +48,7 @@ OBJ_TEST = $(TEST_FILES:%.c=$(OBJDIR)/%.o)
 
 all:	$(NAME)
 
-$(NAME): $(LIBFT) $(OBJDIR) $(OBJ)
+$(NAME): $(OBJDIR) $(LIBFT) $(OBJ)
 	$(CC) $(HEADERS) $(CFLAGS) $(OBJ) -o $@ $(LIBS)
 
 $(OBJDIR)/%.o: %.c
