@@ -20,6 +20,11 @@ static int	is_special(char	const c)
 	return (ft_strchr("|&()><", c) != NULL);
 }
 
+static int	is_space(char const c)
+{
+	return (c == ' ');
+}
+
 static void	which_other_tokens(struct s_tokens **head, char const *line,
 		unsigned int *cursor)
 {
@@ -45,7 +50,9 @@ static int	treat_words(struct s_tokens **head, char const *line,
 	char			*next_quotes;
 
 	counter = *cursor;
-	while (line[counter] != '\0' && !is_special(line[counter]))
+	while (line[counter] != '\0'
+		&& NOT is_space(line[counter])
+		&& NOT is_special(line[counter]))
 	{
 		c = ('\'' * (line[counter] == '\''))
 			+ ('\"' * (line[counter] == '\"'));
@@ -61,7 +68,7 @@ static int	treat_words(struct s_tokens **head, char const *line,
 	}
 	add_back_token(head,
 		new_token(ft_substr(line, *cursor, counter - *cursor), T_WORD));
-	(*cursor) += counter;
+	(*cursor) += (counter - *cursor);
 	return (0);
 }
 
@@ -71,8 +78,8 @@ struct s_tokens	*tokenizer(char const *line)
 	unsigned int	cursor;
 
 	head = NULL;
-	cursor = 0;
-	while (line[cursor] != '\0')
+	cursor = -1;
+	while (line[++cursor] != '\0')
 	{
 		if (is_special(line[cursor]))
 			which_other_tokens(&head, line, &cursor);
@@ -82,7 +89,6 @@ struct s_tokens	*tokenizer(char const *line)
 				return (NULL);
 			continue ;
 		}
-		cursor += 1;
 	}
 	return (head);
 }
