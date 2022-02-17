@@ -10,17 +10,16 @@ else
 endif
 
 #Directories
-OBJDIR		=	obj
-LIBFTDIR	=	libft
-SRCDIR		=	src
-HEADERDIR	=	headers
-TESTDIR		=	Tests
+OBJDIR		:=	obj
+LIBFTDIR	:=	libft
+SRCDIR		:=	src
+HEADERDIR	:=	headers
+TESTDIR		:=	Tests
 
-vpath %.c $(SRCDIR) $(SRCDIR)/builtins $(SRCDIR)/tokenizer\
-	$(SRCDIR)/errors $(TESTDIR)
+VPATH = $(SRCDIR):$(SRCDIR)/lexer:$(SRCDIR)/errors:$(TESTDIR)
 
 #Libs
-LIBFT	=	libft.a
+LIBFT	=	$(LIBFTDIR)/libft.a
 LIBS	=	-L$(LIBFTDIR) -lft -lreadline
 
 #TEST
@@ -35,7 +34,8 @@ TEST_FILES = $(FILES)\
 			 tests_utils_tokenizer.c\
 			 tests_treat_word.c
 
-SRC = main.c $(FILES)
+SRC = main.c\
+	  $(FILES)
 
 
 #INCLUDES
@@ -48,10 +48,10 @@ OBJ_TEST = $(TEST_FILES:%.c=$(OBJDIR)/%.o)
 
 all:	$(NAME)
 
-$(NAME): $(LIBFT) $(OBJ)
+$(NAME): $(LIBFT) $(OBJDIR) $(OBJ)
 	$(CC) $(HEADERS) $(CFLAGS) $(OBJ) -o $@ $(LIBS)
 
-$(OBJDIR)/%.o: %.c $(OBJDIR)
+$(OBJDIR)/%.o: %.c
 	$(CC) $(HEADERS) $(CFLAGS) -c $< -o $@
 
 $(OBJDIR):
