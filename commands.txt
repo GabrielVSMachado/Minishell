@@ -1,0 +1,334 @@
+ | -> PIPE;
+ && -> AND;
+ || -> OR;
+ '' -> SINGLE QUOTES: ignore all content;
+ "" -> DOUBLE QUOTES: expand only environments variables;
+ > -> REDIRECT OUTPUT;
+ < -> REDIRECT INPUT;
+ >> -> REDIRECT OUTPUT WITH APPEND MODE;
+ << -> HEREDOC;
+
+
+
+-- TOKENIZER {
+	COMMAND: cat Makefile
+	- LIST: {
+		{
+			CONTENT: "cat",
+			KIND: T_WORD
+		},
+		{
+			CONTENT: "Makefile",
+			KIND: T_WORD
+		}
+	};
+
+	COMMAND: tr '\n' ' ' < command.txt
+	- LIST: {
+		{
+			CONTENT: tr,
+			KIND: T_WORD
+		},
+		{
+			CONTENT: '\n',
+			KIND: T_WORD
+		},
+		{
+			CONTENT: ' ',
+			KIND: T_WORD
+		},
+		{
+			CONTENT: <,
+			KIND: T_RINPUT
+		},
+		{
+			CONTENT: command.txt,
+			KIND: T_WORD
+		}
+	};
+
+	COMMAND: cat Makefile > makefile.txt
+	- LIST: {
+		{
+			CONTENT: cat,
+			KIND: T_WORD
+		},
+		{
+			CONTENT: Makefile,
+			KIND: T_WORD
+		},
+		{
+			CONTENT: >,
+			KIND: T_ROUTPUT
+		},
+		{
+			CONTENT: makefile.txt,
+			KIND: T_WORD
+		}
+	};
+
+	COMMAND: tr 'banana pera' 'manga abacaxi' < frutas.csv
+	- LIST: {
+		{
+			CONTENT: tr,
+			KIND: T_WORD
+		},
+		{
+			CONTENT: 'banana pera',
+			KIND: T_WORD
+		},
+		{
+			CONTENT: 'manga abacaxi',
+			KIND: T_WORD
+		},
+		{
+			CONTENT: <,
+			KIND: T_RINPUT
+		},
+		{
+			CONTENT: frutas.csv,
+			KIND: T_WORD
+		}
+	};
+
+	COMMAND: << out tr 'a' 'b'
+	- LIST: {
+		{
+			CONTENT: <<,
+			KIND: T_HEREDOC
+		},
+		{
+			CONTENT: out,
+			KIND: T_WORD
+		},
+		{
+			CONTENT: tr,
+			KIND: T_WORD
+		},
+		{
+			CONTENT: 'a',
+			KIND: T_WORD
+		},
+		{
+			CONTENT: 'b',
+			KIND: T_WORD
+		}
+	};
+
+
+	COMMAND: echo tim
+	- LIST: {
+		{
+			CONTENT: echo
+			KIND: T_WORD
+		},
+		{
+			CONTENT: tim,
+			KIND: T_WORD
+		}
+	};
+
+	COMMAND: true && echo $? && false || echo $?
+	- LIST: {
+		{
+			CONTENT: true,
+			KIND: T_WORD
+		},
+		{
+			CONTENT: &&,
+			KIND: T_AND
+		},
+		{
+			CONTENT: echo,
+			KIND: T_WORD
+		},
+		{
+			CONTENT: $?,
+			KIND: T_WORD
+		},
+		{
+			CONTENT: &&,
+			KIND: T_AND
+		},
+		{
+			CONTENT: false,
+			KIND: T_WORD
+		},
+		{
+			CONTENT: ||,
+			KIND: T_OR
+		},
+		{
+			CONTENT: echo,
+			KIND: T_WORD
+		},
+		{
+			CONTENT: $?,
+			KIND: T_WORD
+		}
+	};
+
+	COMMAND: echo < Makefile > out.txt
+	- LIST: {
+		{
+			CONTENT: echo,
+			KIND: T_WORD
+		},
+		{
+			CONTENT: <,
+			KIND: T_RINPUT
+		},
+		{
+			CONTENT: Makefile,
+			KIND: T_WORD
+		},
+		{
+			CONTENT: >,
+			KIND: T_ROUTPUT
+		},
+		{
+			CONTENT: out.txt,
+			KIND: T_WORD
+		}
+	};
+
+	COMMAND: << "(cat)"
+	- LIST: {
+		{
+			CONTENT: NULL,
+			KIND: T_HEREDOC
+		},
+		{
+			CONTENT: "(cat)",
+			KIND: T_WORD
+		}
+	};
+
+	COMMAND: cd .. > abc.txt | echo oi
+	- LIST: {
+		{
+			CONTENT: cd,
+			KIND: T_WORD
+		},
+		{
+			CONTENT: ..,
+			KIND: T_WORD
+		},
+		{
+			CONTENT: abc.txt,
+			KIND: T_WORD
+		},
+		{
+			CONTENT: NULL,
+			KIND: T_PIPE
+		},
+		{
+			CONTENT: echo,
+			KIND: T_WORD
+		},
+		{
+			CONTENT: oi,
+			KIND: T_WORD
+		}
+	};
+
+	COMMAND: cat Makefile > tr README.md // Content of README and Makefile got to "tr"
+	- LIST: {
+		{
+			CONTENT: cat,
+			KIND: T_WORD
+		},
+		{
+			CONTENT: Makefile,
+			KIND: T_WORD
+		},
+		{
+			CONTENT: NULL,
+			KIND: T_ROUTPUT
+		},
+		{
+			CONTENT: tr,
+			KIND: T_WORD
+		},
+		{
+			CONTENT: README.md,
+			KIND: T_WORD
+		}
+	};
+
+	COMMAND: cat | > test.txt < Makefile
+	- LIST: {
+		{
+			CONTENT: cat,
+			KIND: T_WORD
+		},
+		{
+			CONTENT: NULL,
+			KIND: T_PIPE
+		},
+		{
+			CONTENT: NULL,
+			KIND: T_ROUTPUT
+		},
+		{
+			CONTENT: test.txt,
+			KIND: T_WORD
+		},
+		{
+			CONTENT: NULL,
+			KIND: T_RINPUT
+		},
+		{
+			CONTENT: Makefile,
+			KIND: T_WORD
+		}
+	};
+
+	COMMAND: cat | << makefile
+	- LIST: {
+		{
+			CONTENT: cat,
+			KIND: T_WORD
+		},
+		{
+			CONTENT: NULL,
+			KIND: T_PIPE
+		},
+		{
+			CONTENT: NULL,
+			KIND: T_HEREDOC
+		},
+		{
+			CONTENT: makefile,
+			KIND: T_WORD
+		}
+	};
+
+	COMMAND: echo "gabriel" > tr 'a' 'b'
+	- LIST: {
+		{
+			CONTENT: echo,
+			KIND: T_WORD
+		},
+		{
+			CONTENT: "gabriel",
+			KIND: T_WORD
+		},
+		{
+			CONTENT: NULL,
+			KIND: T_ROUTPUT
+		},
+		{
+			CONTENT: tr,
+			KIND: T_WORD
+		},
+		{
+			CONTENT: 'a',
+			KIND: T_WORD
+		},
+		{
+			CONTENT: 'b',
+			KIND: T_WORD
+		}
+	};
+};

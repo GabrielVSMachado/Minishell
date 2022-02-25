@@ -1,0 +1,63 @@
+ | -> PIPE;
+ && -> AND;
+ || -> OR;
+ '' -> SINGLE QUOTES: ignore all content;
+ "" -> DOUBLE QUOTES: expand only environments variables;
+ > -> REDIRECT OUTPUT;
+ < -> REDIRECT INPUT;
+ >> -> REDIRECT OUTPUT WITH APPEND MODE;
+ << -> HEREDOC;
+
+ - TOKENIZER_INVALIDS: {
+	COMMAND: valgrind ./test |& cat -e (Invalid T_PIPE -> T_WORD(content null))
+	- LIST: {
+		{
+			CONTENT: valgrind,
+			KIND: T_WORD
+		},
+		{
+			CONTENT: ./test,
+			KIND: T_WORD
+		},
+		{
+			CONTENT: |,
+			KIND: T_PIPE
+		},
+		{
+			CONTENT: NULL (&),
+			KIND: T_WORD
+		},
+		{
+			CONTENT: cat,
+			KIND: T_WORD
+		},
+		{
+			CONTENT: e,
+			KIND: T_WORD
+		}
+	};
+
+	COMMAND: << (cat Makefile) // After HEREDOC always words
+	- LIST: {
+		{
+			CONTENT: NULL,
+			KIND: T_HEREDOC
+		},
+		{
+			CONTENT: NULL,
+			KIND: T_OPARENTHESIS
+		},
+		{
+			CONTENT: cat,
+			KIND: T_WORD
+		},
+		{
+			CONTENT: Makefile,
+			KIND: T_WORD
+		},
+		{
+			CONTENT: NULL,
+			KIND: T_CPARENTHESIS
+		}
+	}
+ }
