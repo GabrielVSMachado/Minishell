@@ -251,3 +251,150 @@ Test(tokenizer, expected_llist_with_six_words_and_AND_and_OR) {
 		cr_assert(tmp->token == tokens[i++]);
 	}
 }
+
+Test(tokenizer, expected_llist_with_rinput_routput_and_three_words) {
+	char const	*line = "echo < Makefile > out.txt";
+	struct s_tokens	*head = NULL;
+	const char *expected_values[] = {
+		"echo",
+		NULL,
+		"Makefile",
+		NULL,
+		"out.txt"
+	};
+	const unsigned int expected_tokens[] = {
+		T_WORD,
+		T_RINPUT,
+		T_WORD,
+		T_ROUTPUT,
+		T_WORD
+	};
+
+	head = tokenizer(line);
+	int	i = 0;
+	for (struct s_tokens *tmp = head; tmp; tmp = tmp->next) {
+		if (!expected_values[i]) {
+			cr_assert_null(tmp->value);
+		} else {
+			cr_assert_str_eq(tmp->value, expected_values[i]);
+		}
+		cr_assert(tmp->token == expected_tokens[i++]);
+	}
+	clear_tokens(&head);
+}
+
+Test(tokenizer, expected_four_words_and_one_pipe) {
+	char const *line = "cat Makefile |tr 'a' 'b'";
+	struct s_tokens *head = NULL;
+	char const *expected_values[] = {
+		"cat",
+		"Makefile",
+		NULL,
+		"tr",
+		"'a'",
+		"'b'"
+	};
+	unsigned const int expected_tokens[] = {
+		T_WORD,
+		T_WORD,
+		T_PIPE,
+		T_WORD,
+		T_WORD,
+		T_WORD
+	};
+	head = tokenizer(line);
+	int i = 0;
+	for (struct s_tokens *tmp = head; tmp; tmp = tmp->next) {
+		if (!expected_values[i]) {
+			cr_assert_null(tmp->value);
+		} else {
+			cr_assert_str_eq(tmp->value, expected_values[i]);
+		}
+		cr_assert(tmp->token == expected_tokens[i++]);
+	}
+	clear_tokens(&head);
+}
+
+Test(tokenizer, expected_llist_with_three_words) {
+	char const *line = "ping -c1 8.8.8.8";
+	struct s_tokens *head = NULL;
+	char const *expected_values[] = {
+		"ping",
+		"-c1",
+		"8.8.8.8"
+	};
+	unsigned const int expected_tokens[] = {
+		T_WORD,
+		T_WORD,
+		T_WORD
+	};
+	head = tokenizer(line);
+	int i = 0;
+	for (struct s_tokens *tmp = head; tmp; tmp = tmp->next) {
+		cr_assert_str_eq(tmp->value, expected_values[i]);
+		cr_assert(tmp->token == expected_tokens[i++]);
+	}
+	clear_tokens(&head);
+}
+
+Test(tokenizer, expected_llist_with_five_words_one_pipe_and_one_rout) {
+	char const *line = "cd .. > abc.txt | echo oi";
+	struct s_tokens *head = NULL;
+	char const *expected_values[] = {
+		"cd",
+		"..",
+		NULL,
+		"abc.txt",
+		NULL,
+		"echo",
+		"oi"
+	};
+	unsigned const int expected_tokens[] = {
+		T_WORD,
+		T_WORD,
+		T_ROUTPUT,
+		T_WORD,
+		T_PIPE,
+		T_WORD,
+		T_WORD
+	};
+	head = tokenizer(line);
+	int i = 0;
+	for (struct s_tokens *tmp = head; tmp; tmp = tmp->next) {
+		if (!expected_values[i]) {
+			cr_assert_null(tmp->value);
+		} else {
+			cr_assert_str_eq(tmp->value, expected_values[i]);
+		}
+		cr_assert(tmp->token == expected_tokens[i++]);
+	}
+	clear_tokens(&head);
+}
+
+Test(tokenizer, expected_RAOUTPUT) {
+	char const *line = "echo 'a' >> abc.txt";
+	struct s_tokens *head = NULL;
+	char const *expected_values[] = {
+		"echo",
+		"'a'",
+		NULL,
+		"abc.txt"
+	};
+	unsigned const int expected_tokens[] = {
+		T_WORD,
+		T_WORD,
+		T_RAOUTPUT,
+		T_WORD
+	};
+	head = tokenizer(line);
+	int i = 0;
+	for (struct s_tokens *tmp = head; tmp; tmp = tmp->next) {
+		if (!expected_values[i]) {
+			cr_assert_null(tmp->value);
+		} else {
+			cr_assert_str_eq(tmp->value, expected_values[i]);
+		}
+		cr_assert(tmp->token == expected_tokens[i++]);
+	}
+	clear_tokens(&head);
+}
