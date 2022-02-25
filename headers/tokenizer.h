@@ -29,15 +29,14 @@ enum	e_tokens
 	T_ROUTPUT,
 	T_RAOUTPUT,
 	T_HEREDOC,
-	T_PIPE,
-	T_SQUOTES,
-	T_DQUOTES,
 	T_OPARENTHESIS,
 	T_CPARENTHESIS,
 	T_AND,
 	T_OR,
+	T_PIPE,
 };
 
+int				find_token(struct s_tokens *head, unsigned int token);
 void			add_back_token(struct s_tokens **head, struct s_tokens *new);
 void			clear_tokens(struct s_tokens **head);
 struct s_tokens	*new_token(char *content, unsigned int token);

@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "tokenizer.h"
+#include "libft.h"
 #include <stdlib.h>
 
 struct s_tokens	*new_token(char *content, unsigned int token)
@@ -62,4 +63,15 @@ void	clear_tokens(struct s_tokens **head)
 		*head = tmp;
 	}
 	*head = NULL;
+}
+
+int	find_token(struct s_tokens *head, unsigned int token)
+{
+	while (head)
+	{
+		if (head->token == token)
+			return (TRUE);
+		head = head->next;
+	}
+	return (FALSE);
 }
