@@ -18,3 +18,30 @@ Test(check_tokens, expected_head_to_be_null_because_of_amper_after_pipe) {
 	head = check_tokens(&head);
 	cr_assert_null(head);
 }
+
+Test(check_tokens, expected_head_to_be_null_because_after_heredoc_needed_word) {
+	const char	*line = "<< (cat Makefile)";
+	struct s_tokens *head = NULL;
+
+	head = tokenizer(line);
+	head = check_tokens(&head);
+	cr_assert_null(head);
+}
+
+Test(check_tokens, expected_head_to_be_null_because_after_rinput_need_word) {
+	const char	*line = "tr 'a' 'b' < (cat Makefile)";
+	struct s_tokens	*head = NULL;
+
+	head = tokenizer(line);
+	head = check_tokens(&head);
+	cr_assert_null(head);
+}
+
+Test(check_tokens, expected_head_to_be_null_because_after_raoutput_need_word) {
+	const char	*line = "cat Makefile >> | tr 'a' 'b'";
+	struct s_tokens *head = NULL;
+
+	head = tokenizer(line);
+	head = check_tokens(&head);
+	cr_assert_null(head);
+}
