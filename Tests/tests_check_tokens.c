@@ -45,3 +45,23 @@ Test(check_tokens, expected_head_to_be_null_because_after_raoutput_need_word) {
 	head = check_tokens(&head);
 	cr_assert_null(head);
 }
+
+Test(check_tokens, expected_head_to_be_not_null_with_valid_command) {
+	const char	*line = "<< out tr 'a' 'b'";
+	struct s_tokens *head = NULL;
+
+	head = tokenizer(line);
+	head = check_tokens(&head);
+	cr_assert_not_null(head);
+	clear_tokens(&head);
+}
+
+Test(check_tokens, expected_head_to_be_not_null_with_valid_command_2) {
+	const char *line = "tr 'banana pera' 'manga abacaxi' < frutas.csv";
+	struct s_tokens *head = NULL;
+
+	head = tokenizer(line);
+	head = check_tokens(&head);
+	cr_assert_not_null(head);
+	clear_tokens(&head);
+}

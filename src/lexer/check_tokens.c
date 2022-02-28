@@ -22,7 +22,7 @@ static int	is_redirection(unsigned int token)
 
 static int	is_valid_word(struct s_tokens *token)
 {
-	return (token->token == T_WORD && token->value != NULL);
+	return (token->next->token == T_WORD && token->next->value != NULL);
 }
 
 static int	is_boolean(unsigned int token)
