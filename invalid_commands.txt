@@ -60,4 +60,21 @@
 			KIND: T_CPARENTHESIS
 		}
 	}
+
+	COMMAND: (cat Makefile
+	- LIST: {
+		{
+			CONTENT: NULL,
+			KIND: T_OPARENTHESIS
+		},
+		{
+			CONTENT: cat,
+			KIND: T_WORD
+		},
+		{
+			CONTENT: Makefile,
+			KIND: T_WORD
+		}
+	};
+
  }
