@@ -28,12 +28,14 @@ TEST	=	test
 #FILES
 FILES = util_struct_tokens.c\
 		tokenizer.c\
+		check_tokens.c\
 		err.c
 
 TEST_FILES = $(FILES)\
 			 tests_utils_tokenizer.c\
 			 tests_treat_word.c\
-			 tests_tokenizer.c
+			 tests_tokenizer.c\
+			 tests_check_tokens.c
 
 SRC = main.c\
 	  $(FILES)

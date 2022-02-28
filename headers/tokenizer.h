@@ -42,4 +42,5 @@ void			clear_tokens(struct s_tokens **head);
 struct s_tokens	*new_token(char *content, unsigned int token);
 struct s_tokens	*last_token(struct s_tokens *head);
 struct s_tokens	*tokenizer(char const *line);
+struct s_tokens	*check_tokens(struct s_tokens **head);
 #endif

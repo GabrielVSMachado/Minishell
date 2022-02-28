@@ -42,7 +42,8 @@ struct s_tokens	*check_tokens(struct s_tokens **head)
 		else if (tmp->token == T_OPARENTHESIS
 			&& NOT find_token(tmp, T_CPARENTHESIS))
 			raise_tokenizer_err("Parenthesis not closed", head);
-		else if (tmp->token == T_PIPE && is_boolean(tmp->token))
+		else if (tmp->token == T_PIPE
+			&& (is_boolean(tmp->token) || NOT is_valid_word(tmp)))
 			raise_tokenizer_err("Invalid character after T_PIPE", head);
 		tmp = tmp->next;
 	}
