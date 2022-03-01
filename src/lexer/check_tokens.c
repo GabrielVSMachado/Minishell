@@ -35,7 +35,8 @@ struct s_tokens	*check_tokens(struct s_tokens **head)
 		if (is_redirection(tmp->token) && NOT is_valid_word(tmp->next))
 			raise_tokenizer_err("Invalid character after redirection", head);
 		else if (tmp->token == T_OPARENTHESIS
-			&& NOT find_token(tmp, T_CPARENTHESIS))
+			&& (tmp->next->token == T_CPARENTHESIS
+				|| NOT find_token(tmp, T_CPARENTHESIS)))
 			raise_tokenizer_err("Parenthesis not closed", head);
 		else if (tmp->token == T_PIPE && NOT (
 				is_redirection(tmp->next->token) || is_valid_word(tmp->next)
