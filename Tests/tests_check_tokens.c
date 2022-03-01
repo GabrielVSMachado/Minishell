@@ -65,3 +65,13 @@ Test(check_tokens, expected_head_to_be_not_null_with_valid_command_2) {
 	cr_assert_not_null(head);
 	clear_tokens(&head);
 }
+
+Test(check_tokens, expected_head_to_be_not_null_with_valid_command_3) {
+	const char *line = "(echo oi | < infile cat)";
+	struct s_tokens *head = NULL;
+
+	head = tokenizer(line);
+	head = check_tokens(&head);
+	cr_assert_not_null(head);
+	clear_tokens(&head);
+}

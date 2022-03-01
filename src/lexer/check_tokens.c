@@ -22,13 +22,8 @@ static int	is_redirection(unsigned int token)
 
 static int	is_valid_word(struct s_tokens *token)
 {
-	return (token->next->token == T_WORD && token->next->value != NULL);
+	return (token->token == T_WORD && token->value != NULL);
 }
-
-static int	is_boolean(unsigned int token)
-{
-	return (token == T_AND || token == T_OR);
-}	
 
 struct s_tokens	*check_tokens(struct s_tokens **head)
 {
@@ -37,13 +32,14 @@ struct s_tokens	*check_tokens(struct s_tokens **head)
 	tmp = *head;
 	while (tmp)
 	{
-		if (is_redirection(tmp->token) && NOT is_valid_word(tmp))
+		if (is_redirection(tmp->token) && NOT is_valid_word(tmp->next))
 			raise_tokenizer_err("Invalid character after redirection", head);
 		else if (tmp->token == T_OPARENTHESIS
 			&& NOT find_token(tmp, T_CPARENTHESIS))
 			raise_tokenizer_err("Parenthesis not closed", head);
-		else if (tmp->token == T_PIPE
-			&& (is_boolean(tmp->token) || NOT is_valid_word(tmp)))
+		else if (tmp->token == T_PIPE && NOT (
+				is_redirection(tmp->next->token) || is_valid_word(tmp->next)
+				|| tmp->next->token == T_OPARENTHESIS))
 			raise_tokenizer_err("Invalid character after T_PIPE", head);
 		tmp = tmp->next;
 	}
