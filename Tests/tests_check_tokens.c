@@ -132,3 +132,13 @@ Test(check_tokens, expected_head_to_be_not_null_with_valid_command_5) {
 	cr_assert_not_null(head);
 	clear_tokens(&head);
 }
+
+Test(check_tokens, expected_head_to_be_not_null_with_valid_command_6) {
+	const char *line = "(echo oi | (cat -e))";
+	struct s_tokens *head = NULL;
+
+	head = tokenizer(line);
+	head = check_tokens(&head);
+	cr_assert_not_null(head);
+	clear_tokens(&head);
+}
