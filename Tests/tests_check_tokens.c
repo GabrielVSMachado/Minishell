@@ -113,3 +113,22 @@ Test(check_tokens, expected_head_to_be_null_because_unclosed_parenthesis) {
 	head = check_tokens(&head);
 	cr_assert_null(head);
 }
+
+Test(check_tokens, expected_head_to_be_null_because_parenthesis_after_pipe) {
+	const char *line = "(echo oi | )";
+	struct s_tokens *head = NULL;
+
+	head = tokenizer(line);
+	head = check_tokens(&head);
+	cr_assert_null(head);
+}
+
+Test(check_tokens, expected_head_to_be_not_null_with_valid_command_5) {
+	const char *line = "(echo oi | > outfile cat)";
+	struct s_tokens *head = NULL;
+
+	head = tokenizer(line);
+	head = check_tokens(&head);
+	cr_assert_not_null(head);
+	clear_tokens(&head);
+}
