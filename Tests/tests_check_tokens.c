@@ -94,3 +94,22 @@ Test(check_tokens, expected_head_to_be_null_open_and_close_parenthesis_without_c
 	head = check_tokens(&head);
 	cr_assert_null(head);
 }
+
+Test(check_tokens, expected_head_to_be_null_because_alone_close_parenthesis) {
+	const char *line = ") cat";
+	struct s_tokens *head = NULL;
+
+	head = tokenizer(line);
+	head = check_tokens(&head);
+	cr_assert_null(head);
+}
+
+
+Test(check_tokens, expected_head_to_be_null_because_unclosed_parenthesis) {
+	const char *line = "echo oi | ((cat -e)";
+	struct s_tokens *head = NULL;
+
+	head = tokenizer(line);
+	head = check_tokens(&head);
+	cr_assert_null(head);
+}

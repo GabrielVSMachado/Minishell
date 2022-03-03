@@ -40,7 +40,8 @@ static void	which_other_tokens(struct s_tokens **head, char const *line,
 			+ T_ROUTPUT * (line[*cursor] == '>' && line[*cursor + 1] != '>')
 			+ T_HEREDOC * (line[*cursor] == '<' && line[*cursor + 1] == '<')
 			));
-	(*cursor) += (1 + (line[*cursor] == line[*cursor + 1]));
+	(*cursor) += (1 + (line[*cursor] == line[*cursor + 1]
+				AND (line[*cursor] != '(' AND line[*cursor] != ')')));
 }
 
 static int	treat_words(struct s_tokens **head, char const *line,

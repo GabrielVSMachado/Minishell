@@ -65,13 +65,13 @@ void	clear_tokens(struct s_tokens **head)
 	*head = NULL;
 }
 
-int	find_token(struct s_tokens *head, unsigned int token)
+struct s_tokens	*find_token(struct s_tokens *head, unsigned int token)
 {
 	while (head)
 	{
 		if (head->token == token)
-			return (TRUE);
+			return (head);
 		head = head->next;
 	}
-	return (FALSE);
+	return (NULL);
 }

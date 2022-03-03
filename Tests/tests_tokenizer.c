@@ -398,3 +398,38 @@ Test(tokenizer, expected_RAOUTPUT) {
 	}
 	clear_tokens(&head);
 }
+
+Test(tokenizer, check_two_parenthesis_sequence) {
+	const char *line = "echo oi | ((cat -e)";
+	struct s_tokens *head = tokenizer(line);
+	const char *expected_values[] = {
+		"echo",
+		"oi",
+		NULL,
+		NULL,
+		NULL,
+		"cat",
+		"-e",
+		NULL
+	};
+	const unsigned int expected_tokens[] = {
+		T_WORD,
+		T_WORD,
+		T_PIPE,
+		T_OPARENTHESIS,
+		T_OPARENTHESIS,
+		T_WORD,
+		T_WORD,
+		T_CPARENTHESIS
+	};
+	int i = 0;
+	for (struct s_tokens *tmp = head; tmp; tmp=tmp->next) {
+		if (!expected_values[i]) {
+			cr_assert_null(tmp->value);
+		}else {
+			cr_assert_str_eq(tmp->value, expected_values[i]);
+		}
+		cr_assert(tmp->token == expected_tokens[i++]);
+	}
+	clear_tokens(&head);
+}
