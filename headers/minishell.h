@@ -14,5 +14,5 @@
 # define MINISHELL_H
 
 int		pwd(void);
-void	expand_command(char **command);
+void	expand_quotes(char **command);
 #endif

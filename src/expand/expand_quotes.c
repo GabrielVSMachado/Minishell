@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   expand_commands.c                                  :+:      :+:    :+:   */
+/*   expand_quotes.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: gvitor-s <gvitor-s@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/03/03 15:39:42 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/03/03 15:39:42 by gvitor-s         ###   ########.fr       */
+/*   Created: 2022/03/05 15:50:25 by gvitor-s          #+#    #+#             */
+/*   Updated: 2022/03/05 15:50:25 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ static size_t	distance_to_next_quote(char *tmp)
 	size_t	len;
 
 	len = 0;
-	while (*tmp AND (*tmp != '\'' AND (*tmp != '\"')))
+	while (*tmp AND (*tmp != '\'' AND (*tmp != '"')))
 	{
 		tmp += 1;
 		len += 1;
@@ -68,7 +68,7 @@ static size_t	extract_word_inside_quotes(struct s_list **to_join, char *tmp,
 	return (len + 2);
 }
 
-void	expand_command(char **command)
+void	expand_quotes(char **command)
 {
 	char			*tmp;
 	struct s_list	*to_join;
