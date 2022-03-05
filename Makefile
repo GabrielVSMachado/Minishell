@@ -17,6 +17,7 @@ HEADERDIR	:=	headers
 TESTDIR		:=	Tests
 
 VPATH = $(SRCDIR):$(SRCDIR)/lexer:$(SRCDIR)/errors:$(TESTDIR)
+VPATH += $(SRCDIR)/expand
 
 #Libs
 LIBFT	=	$(LIBFTDIR)/libft.a
@@ -29,13 +30,15 @@ TEST	=	test
 FILES = util_struct_tokens.c\
 		tokenizer.c\
 		check_tokens.c\
-		err.c
+		err.c\
+		expand_command.c
 
 TEST_FILES = $(FILES)\
 			 tests_utils_tokenizer.c\
 			 tests_treat_word.c\
 			 tests_tokenizer.c\
-			 tests_check_tokens.c
+			 tests_check_tokens.c\
+			 tests_exp_command.c
 
 SRC = main.c\
 	  $(FILES)
@@ -75,7 +78,7 @@ fclean: clean
 re: fclean all
 
 test: $(OBJDIR) $(LIBFT) $(OBJ_TEST)
-	$(CC) $(HEADERS) $(OBJ_TEST) -o $(TEST) $(LIBS) -lcriterion
+	$(CC) $(HEADERS) -g $(OBJ_TEST) -o $(TEST) $(LIBS) -lcriterion
 	@./$(TEST)
 	@$(MAKE) fclean >  /dev/null
 

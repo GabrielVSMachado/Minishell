@@ -13,5 +13,6 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-int	pwd(void);
+int		pwd(void);
+void	expand_command(char **command);
 #endif
