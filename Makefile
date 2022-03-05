@@ -31,14 +31,14 @@ FILES = util_struct_tokens.c\
 		tokenizer.c\
 		check_tokens.c\
 		err.c\
-		expand_command.c
+		expand_quotes.c
 
 TEST_FILES = $(FILES)\
 			 tests_utils_tokenizer.c\
 			 tests_treat_word.c\
 			 tests_tokenizer.c\
 			 tests_check_tokens.c\
-			 tests_exp_command.c
+			 tests_exp_quotes.c
 
 SRC = main.c\
 	  $(FILES)
