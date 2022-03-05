@@ -50,7 +50,7 @@ static size_t	word_before_quotes(struct s_list **to_join, char *tmp)
 	size_t	len;
 
 	len = distance_to_next_quote(tmp);
-	ft_lstadd_back(to_join, ft_lstnew(ft_memcpy(malloc(len), tmp, len)));
+	ft_lstadd_back(to_join, ft_lstnew(ft_memcpy(malloc(len + 1), tmp, len)));
 	((char *)(ft_lstlast(*to_join)->content))[len] = 0;
 	return (len);
 }
@@ -75,12 +75,12 @@ void	expand_command(char **command)
 	char			c;
 
 	tmp = *command;
-	if (NOT (ft_strchr(tmp, '\'') OR ft_strchr(tmp, '\"')))
+	if (NOT (ft_strchr(tmp, '\'') OR ft_strchr(tmp, '"')))
 		return ;
 	to_join = NULL;
 	while (*tmp)
 	{
-		c = '\'' * (*tmp == '\'') + '\"' * (*tmp == '\"');
+		c = '\'' * (*tmp == '\'') + '"' * (*tmp == '"');
 		if (c)
 			tmp += extract_word_inside_quotes(&to_join, tmp, c);
 		else
