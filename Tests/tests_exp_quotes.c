@@ -1,5 +1,5 @@
 #include <criterion/criterion.h>
-#include "minishell.h"
+#include "expand_str.h"
 #include <stdio.h>
 
 Test(expand_quotess, expected_line_eq_expected_value) {
