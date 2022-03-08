@@ -331,4 +331,105 @@
 			KIND: T_WORD
 		}
 	};
+
+	COMMAND: echo oi | (echo oi)
+	- LIST: {
+		{
+			CONTENT: echo,
+			KIND: T_WORD
+		},
+		{
+			CONTENT: oi,
+			KIND: T_WORD
+		},
+		{
+			CONTENT: NULL,
+			KIND: T_PIPE
+		},
+		{
+			CONTENT: NULL,
+			KIND: T_OPARENTHESIS
+		},
+		{
+			CONTENT: echo,
+			KIND: T_WORD
+		},
+		{
+			CONTENT: oi,
+			KIND: T_WORD
+		},
+		{
+			CONTENT: NULL,
+			KIND: T_CPARENTHESIS
+		}
+	};
+
+
+	COMMAND: (echo oi | < infile cat)
+	- LIST: {
+		{
+			Content: NULL,
+			KIND: T_OPARENTHESIS
+		},
+		{
+			CONTENT: echo,
+			KIND: T_WORD
+		},
+		{
+			CONTENT: oi,
+			KIND: T_WORD
+		},
+		{
+			CONTENT: NULL,
+			KIND: T_PIPE
+		},
+		{
+			CONTENT: NULL,
+			KIND: T_RINPUT
+		},
+		{
+			CONTENT: infile,
+			KIND: T_WORD
+		},
+		{
+			CONTENT: cat,
+			KIND: T_WORD
+		},
+		{
+			CONTENT: NULL,
+			KIND: T_CPARENTHESIS
+		}
+	};
+
+	CONTENT: echo oi | (cat -e)
+	- LIST: {
+		{
+			CONTENT: echo,
+			KIND: T_WORD
+		},
+		{
+			CONTENT: oi,
+			KIND: T_WORD
+		},
+		{
+			CONTENT: NULL,
+			KIND: T_PIPE
+		},
+		{
+			CONTENT: NULL,
+			KIND: T_OPARENTHESIS
+		},
+		{
+			CONTENT: cat,
+			KIND: T_WORD
+		},
+		{
+			CONTENT: -e,
+			KIND: T_WORD
+		},
+		{
+			CONTENT: NULL,
+			KIND: T_CPARENTHESIS
+		}
+	};
 };

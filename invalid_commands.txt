@@ -77,4 +77,28 @@
 		}
 	};
 
+	COMMAND: ) cat
+	- LIST: {
+		{
+			CONTENT: NULL,
+			KIND: T_CPARENTHESIS
+		},
+		{
+			CONTENT: cat,
+			KIND: T_WORD
+		}
+	};
+
+	COMMAND: ()
+	- LIST: {
+		{
+			CONTENT: NULL,
+			KIND: T_OPARENTHESIS
+		},
+		{
+			CONTENT:NULL,
+			KIND: T_CPARENTHESIS
+		}
+	};
+
  }
