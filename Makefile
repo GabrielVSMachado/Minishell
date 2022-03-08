@@ -17,7 +17,7 @@ HEADERDIR	:=	headers
 TESTDIR		:=	Tests
 
 VPATH = $(SRCDIR):$(SRCDIR)/lexer:$(SRCDIR)/errors:$(TESTDIR)
-VPATH += $(SRCDIR)/expand
+VPATH += $(SRCDIR)/expand:$(SRCDIR)/builtins/hashtable
 
 #Libs
 LIBFT	=	$(LIBFTDIR)/libft.a
@@ -31,14 +31,17 @@ FILES = util_struct_tokens.c\
 		tokenizer.c\
 		check_tokens.c\
 		err.c\
-		expand_quotes.c
+		expand_quotes.c\
+		hashtable.c\
+		utils_keyval_lst.c
 
 TEST_FILES = $(FILES)\
 			 tests_utils_tokenizer.c\
 			 tests_treat_word.c\
 			 tests_tokenizer.c\
 			 tests_check_tokens.c\
-			 tests_exp_quotes.c
+			 tests_exp_quotes.c\
+			 tests_insert_hashtable.c
 
 SRC = main.c\
 	  $(FILES)
@@ -46,7 +49,7 @@ SRC = main.c\
 
 #INCLUDES
 HEADERDIR_LIBFT	= $(LIBFTDIR)/headers
-HEADERS	= -I$(HEADERDIR) -I$(HEADERDIR_LIBFT)
+HEADERS	= -I $(HEADERDIR) -I $(HEADERDIR_LIBFT) -I src
 
 #OBJECTS
 OBJ = $(SRC:%.c=$(OBJDIR)/%.o)
