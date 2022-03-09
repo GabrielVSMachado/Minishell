@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/05 16:48:33 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/03/09 14:05:03 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/03/09 14:28:52 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,12 +64,12 @@ void	insert_hashtbl(const char *key, const char *value)
 	if (tmp)
 	{
 		free(tmp->val);
-		tmp->val = ft_strdup(value);
+		tmp->val = (char *)value;
 	}
 	else
 	{
 		keyval_add_back(&g_envs.hashtbl[h_bucket % TBLSIZE],
-			new_node_of_bucket(ft_strdup(key), ft_strdup(value)));
+			new_node_of_bucket((char *)key, (char *)value));
 		g_envs.size += 1;
 	}
 }

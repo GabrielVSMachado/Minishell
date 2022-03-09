@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/07 14:54:06 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/03/08 18:08:52 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/03/09 13:54:56 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ struct	s_hashtbl
 	unsigned int	size;
 };
 
-struct s_hashtbl	*hashtbl_init(void);
 struct s_keyval		*hashtbl_lookup(const char *key);
 void				insert_hashtbl(const char *key, const char *value);
+void				destroy_hashtbl(void);
 #endif
