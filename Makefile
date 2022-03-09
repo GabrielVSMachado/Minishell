@@ -41,7 +41,8 @@ TEST_FILES = $(FILES)\
 			 tests_tokenizer.c\
 			 tests_check_tokens.c\
 			 tests_exp_quotes.c\
-			 tests_insert_hashtable.c
+			 tests_insert_hashtable.c\
+			 tests_destroy_hashtable.c
 
 SRC = main.c\
 	  $(FILES)

@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/05 16:48:33 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/03/08 18:46:58 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/03/09 14:05:03 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #include <errno.h>
 #include "utils_keyval_lst.h"
 
-extern struct s_hashtbl	*g_envs;
+struct s_hashtbl	g_envs = {};
 
 static unsigned int	hash(const char *key)
 {
@@ -44,7 +44,7 @@ struct s_keyval	*hashtbl_lookup(const char *key)
 {
 	struct s_keyval	*tmp;
 
-	tmp = g_envs->hashtbl[hash(key)];
+	tmp = g_envs.hashtbl[hash(key)];
 	while (tmp)
 	{
 		if (ft_strcmp(key, tmp->key) == 0)
@@ -68,8 +68,20 @@ void	insert_hashtbl(const char *key, const char *value)
 	}
 	else
 	{
-		keyval_add_back(&g_envs->hashtbl[h_bucket % TBLSIZE],
+		keyval_add_back(&g_envs.hashtbl[h_bucket % TBLSIZE],
 			new_node_of_bucket(ft_strdup(key), ft_strdup(value)));
-		g_envs->size += 1;
+		g_envs.size += 1;
+	}
+}
+
+void	destroy_hashtbl(void)
+{
+	unsigned int	bucket;
+
+	bucket = 0;
+	while (bucket < TBLSIZE)
+	{
+		clear_bucket(&g_envs.hashtbl[bucket]);
+		bucket += 1;
 	}
 }
