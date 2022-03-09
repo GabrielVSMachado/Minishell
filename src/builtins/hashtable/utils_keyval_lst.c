@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/08 18:26:43 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/03/08 18:40:11 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/03/09 14:08:18 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ struct s_keyval	*new_node_of_bucket(char *key, char *value)
 		return (NULL);
 	new->val = value;
 	new->key = key;
+	new->next = NULL;
 	return (new);
 }
 
@@ -41,4 +42,19 @@ void	keyval_add_back(struct s_keyval **bucket, struct s_keyval *new)
 		*bucket = new;
 	else
 		last_node_of_bucket(*bucket)->next = new;
+}
+
+void	clear_bucket(struct s_keyval **bucket)
+{
+	struct s_keyval	*tmp;
+
+	while ((*bucket) != NULL)
+	{
+		tmp = (*bucket)->next;
+		free((*bucket)->key);
+		free((*bucket)->val);
+		free(*bucket);
+		(*bucket) = tmp;
+	}
+	*bucket = NULL;
 }
