@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/05 16:17:26 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/03/11 00:26:49 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/03/11 19:36:34 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,31 +18,24 @@ extern struct s_hashtbl	g_envs;
 
 static char	*make_new_string(char	*tmp)
 {
-	struct s_list			*to_join;
-	struct s_list			*expanded_strings;
-	struct s_str_map_helper	helper;
-	char					*result;
+	char	*dollar;
+	t_list	*to_join;
+	char	*new_str;
 
 	to_join = NULL;
-	expanded_strings = NULL;
-	helper.dollar_c = ft_strchr(tmp, '$');
-	while (helper.dollar_c)
+	dollar = ft_strchr(tmp, '$');
+	while (dollar)
 	{
-		helper.len_prev = helper.dollar_c - tmp;
-		helper.prev_str = ft_memcpy(malloc(helper.len_prev + 1), tmp, helper.len_prev);
-		helper.prev_str[helper.len_prev] = 0;
-		ft_lstadd_back(&to_join, ft_lstnew(helper.prev_str));
-		ft_lstadd_back(&to_join, ft_lstnew(treat_envs(helper.dollar_c)));
-		tmp += (helper.len_prev + len_env_name(helper.dollar_c) + 1);
-		helper.dollar_c = ft_strchr(tmp, '$');
-		if (NOT helper.dollar_c)
-			ft_lstadd_back(&to_join, ft_lstnew(ft_strdup(tmp)));
-		ft_lstadd_back(&expanded_strings, ft_lstnew(join_command(to_join)));
-		ft_lstclear(&to_join, free);
+		ft_lstadd_back(&to_join, ft_lstnew(
+				ft_substr(tmp, 0, dollar - tmp)));
+		ft_lstadd_back(&to_join, ft_lstnew(treat_envs(dollar)));
+		tmp += ((dollar - tmp + 1) + len_env_name(dollar));
+		dollar = ft_strchr(tmp, '$');
 	}
-	result = join_command(expanded_strings);
-	ft_lstclear(&expanded_strings, free);
-	return (result);
+	ft_lstadd_back(&to_join, ft_lstnew(ft_strdup(tmp)));
+	new_str = join_command(to_join);
+	ft_lstclear(&to_join, free);
+	return (new_str);
 }
 
 static void	*map_helper(void *content)
@@ -92,6 +85,8 @@ void	expand_env_variables(char **word)
 	char	c;
 
 	tmp = *word;
+	if (NOT ft_strchr(tmp, '$'))
+		return ;
 	to_join = NULL;
 	to_expand_env = NULL;
 	while (*tmp)

@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/09 14:23:03 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/03/10 22:50:29 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/03/11 19:26:42 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ unsigned int	len_env_name(char *env_name)
 
 	tmp = env_name;
 	tmp += 1;
-	if (ft_isdigit(*tmp) || *tmp == '?')
+	if (ft_isdigit(*tmp) || *tmp == '?' || *tmp == '$')
 		return (1);
 	while (*tmp && (ft_isalnum(*tmp) || *tmp == '_'))
 		tmp += 1;
@@ -60,6 +60,8 @@ char	*treat_envs(char *env_name)
 
 	tmp = env_name;
 	len_name = len_env_name(env_name);
+	if (len_name == 0)
+		return (ft_strdup("$"));
 	tmp += 1;
 	tmp = ft_memcpy(malloc(len_name + 1), tmp, len_name);
 	tmp[len_name] = 0;
