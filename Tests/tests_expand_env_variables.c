@@ -318,3 +318,14 @@ Test(expand_env_command, expected_result_eq_expected_value_20) {
 	destroy_hashtbl();
 	free(word);
 }
+
+Test(expand_env_command, expected_result_eq_expected_value_21) {
+	const char *expected_value = "\"daora$\"massa";
+	char	*word = ft_strdup("\"daora$\"massa");
+
+	insert_hashtbl(ft_strdup("$"), ft_strdup("9098"));
+	expand_env_variables(&word);
+	cr_assert_str_eq(word, expected_value);
+	destroy_hashtbl();
+	free(word);
+}

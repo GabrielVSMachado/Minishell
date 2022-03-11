@@ -35,18 +35,20 @@ FILES = util_struct_tokens.c\
 		hashtable.c\
 		utils_keyval_lst.c\
 		utils_envs.c\
-		expand_env_variables.c
+		expand_env_variables.c\
+		expand_command.c
 
 TEST_FILES = $(FILES)\
-			 tests_utils_tokenizer.c\
-			 tests_treat_word.c\
-			 tests_tokenizer.c\
-			 tests_check_tokens.c\
-			 tests_exp_quotes.c\
-			 tests_insert_hashtable.c\
-			 tests_destroy_hashtable.c\
-			 tests_init_envs.c\
-			 tests_expand_env_variables.c
+			tests_utils_tokenizer.c\
+			tests_treat_word.c\
+			tests_tokenizer.c\
+			tests_check_tokens.c\
+			tests_exp_quotes.c\
+			tests_insert_hashtable.c\
+			tests_destroy_hashtable.c\
+			tests_init_envs.c\
+			tests_expand_env_variables.c\
+			tests_expand_command.c
 
 SRC = main.c\
 	  $(FILES)
