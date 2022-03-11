@@ -6,13 +6,13 @@
 /*   By: gvitor-s <gvitor-s@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/05 15:50:25 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/03/05 15:50:25 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/03/10 20:47:28 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-static char	*join_command(struct s_list *to_join)
+char	*join_command(struct s_list *to_join)
 {
 	char	*result;
 	char	*tmp;
