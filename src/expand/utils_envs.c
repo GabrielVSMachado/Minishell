@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/09 14:23:03 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/03/11 19:26:42 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/03/11 19:51:57 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,10 +29,9 @@ int	init_envs(void)
 	{
 		p_equal = ft_strchr(*tmp, '=');
 		len_key = p_equal - *tmp;
-		key = ft_memcpy(malloc(len_key + 1), *tmp, len_key);
+		key = ft_substr(*tmp, 0, len_key);
 		if (NOT key)
 			return (raise_env_error());
-		key[len_key] = 0;
 		insert_hashtbl(key, ft_strdup(p_equal + 1));
 		tmp += 1;
 	}
@@ -63,8 +62,7 @@ char	*treat_envs(char *env_name)
 	if (len_name == 0)
 		return (ft_strdup("$"));
 	tmp += 1;
-	tmp = ft_memcpy(malloc(len_name + 1), tmp, len_name);
-	tmp[len_name] = 0;
+	tmp = ft_substr(tmp, 0, len_name);
 	p_env = hashtbl_lookup(tmp);
 	free(tmp);
 	if (NOT p_env)

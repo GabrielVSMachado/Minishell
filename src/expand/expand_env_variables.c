@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/05 16:17:26 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/03/11 19:36:34 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/03/11 19:56:25 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,8 +58,7 @@ static int	add_string_without_quotes(char *tmp, struct s_list **llist)
 	while (*tmp && *tmp != '\'' && *tmp != '"')
 		tmp += 1;
 	len_str = tmp - holder;
-	result_str = ft_memcpy(malloc(len_str + 1), holder, len_str);
-	result_str[len_str] = 0;
+	result_str = ft_substr(holder, 0, len_str);
 	ft_lstadd_back(llist, ft_lstnew(result_str));
 	return (len_str);
 }
@@ -71,8 +70,7 @@ static int	add_string_delimited_by_c(char *str, struct s_list **llist,
 	unsigned int	len_string;
 
 	len_string = ft_strchr(str + 1, c) - str;
-	string_to_add = ft_memcpy(malloc(len_string + 2), str, len_string + 1);
-	string_to_add[len_string + 1] = 0;
+	string_to_add = ft_substr(str, 0, len_string + 1);
 	ft_lstadd_back(llist, ft_lstnew(string_to_add));
 	return (len_string + 1);
 }

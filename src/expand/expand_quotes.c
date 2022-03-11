@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/05 15:50:25 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/03/10 20:47:28 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/03/11 19:54:31 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,8 +50,7 @@ static size_t	word_before_quotes(struct s_list **to_join, char *tmp)
 	size_t	len;
 
 	len = distance_to_next_quote(tmp);
-	ft_lstadd_back(to_join, ft_lstnew(ft_memcpy(malloc(len + 1), tmp, len)));
-	((char *)(ft_lstlast(*to_join)->content))[len] = 0;
+	ft_lstadd_back(to_join, ft_lstnew(ft_substr(tmp, 0, len)));
 	return (len);
 }
 
@@ -62,9 +61,7 @@ static size_t	extract_word_inside_quotes(struct s_list **to_join, char *tmp,
 
 	tmp += 1;
 	len = ft_strchr(tmp, c) - tmp;
-	ft_lstadd_back(to_join,
-		ft_lstnew(ft_memcpy(malloc(len + 1), tmp, len)));
-	((char *)(ft_lstlast(*to_join)->content))[len] = 0;
+	ft_lstadd_back(to_join, ft_lstnew(ft_substr(tmp, 0, len)));
 	return (len + 2);
 }
 
