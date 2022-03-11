@@ -34,7 +34,8 @@ FILES = util_struct_tokens.c\
 		expand_quotes.c\
 		hashtable.c\
 		utils_keyval_lst.c\
-		init_envs.c
+		utils_envs.c\
+		expand_env_variables.c
 
 TEST_FILES = $(FILES)\
 			 tests_utils_tokenizer.c\
@@ -44,7 +45,8 @@ TEST_FILES = $(FILES)\
 			 tests_exp_quotes.c\
 			 tests_insert_hashtable.c\
 			 tests_destroy_hashtable.c\
-			 tests_init_envs.c
+			 tests_init_envs.c\
+			 tests_expand_env_variables.c
 
 SRC = main.c\
 	  $(FILES)
