@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/05 16:48:33 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/03/12 19:36:32 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/03/12 20:28:22 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,4 +112,6 @@ void	destroy_hashtbl(void)
 		bucket += 1;
 	}
 	free(g_envs.hashtbl);
+	g_envs.hashtbl = NULL;
+	g_envs.size = 0;
 }

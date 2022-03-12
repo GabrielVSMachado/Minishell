@@ -15,7 +15,5 @@ Test(destroy_hashtable, expected_g_envs_null){
 	insert_hashtbl(strdup("welton"), strdup("me daaaa um real"));
 	insert_hashtbl(strdup("dani"), strdup("do elixir"));
 	destroy_hashtbl();
-	for (int bucket = 0; bucket < TBLSIZE; bucket++) {
-		cr_assert_null(g_envs.hashtbl[bucket]);
-	}
+	cr_assert_null(g_envs.hashtbl);
 }
