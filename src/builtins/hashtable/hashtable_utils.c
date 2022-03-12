@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/12 17:14:04 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/03/12 17:32:11 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/03/12 19:40:19 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ static struct s_keyval	**create_hashtbl(void)
 {
 	struct s_keyval	**result;
 
-	result = (struct s_keyval **)malloc(sizeof(struct s_keyval *) * TBLSIZE);
+	result = (struct s_keyval **)ft_calloc(sizeof(struct s_keyval *), TBLSIZE);
 	if (NOT (result))
 		return (NULL);
 	return (result);

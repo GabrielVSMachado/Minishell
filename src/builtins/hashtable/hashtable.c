@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/05 16:48:33 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/03/12 17:55:56 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/03/12 19:36:32 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #include <errno.h>
 #include "utils_keyval_lst.h"
 
-struct s_hashtbl	g_envs = {};
+struct s_hashtbl	g_envs;
 
 static unsigned int	hash(const char *key)
 {
@@ -74,7 +74,7 @@ void	insert_hashtbl(const char *key, const char *value)
 	}
 }
 
-struct s_keyval	**remove_key(const char *key)
+struct s_keyval	*remove_key(const char *key)
 {
 	struct s_keyval	*prev;
 	struct s_keyval	*element;
@@ -91,10 +91,14 @@ struct s_keyval	**remove_key(const char *key)
 		element = element->next;
 	}
 	if (NOT prev)
-		return (bucket);
+	{
+		*bucket = element->next;
+		element->next = NULL;
+		return (element);
+	}
 	prev->next = element->next;
 	element->next = NULL;
-	return ((struct s_keyval **)element);
+	return (element);
 }
 
 void	destroy_hashtbl(void)
@@ -107,4 +111,5 @@ void	destroy_hashtbl(void)
 		clear_bucket(&g_envs.hashtbl[bucket]);
 		bucket += 1;
 	}
+	free(g_envs.hashtbl);
 }
