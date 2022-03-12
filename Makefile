@@ -17,7 +17,7 @@ HEADERDIR	:=	headers
 TESTDIR		:=	Tests
 
 VPATH = $(SRCDIR):$(SRCDIR)/lexer:$(SRCDIR)/errors:$(TESTDIR)
-VPATH += $(SRCDIR)/expand:$(SRCDIR)/builtins/hashtable
+VPATH += $(SRCDIR)/expand:$(SRCDIR)/builtins/hashtable:$(SRCDIR)/builtins
 
 #Libs
 LIBFT	=	$(LIBFTDIR)/libft.a
@@ -37,7 +37,8 @@ FILES = util_struct_tokens.c\
 		utils_envs.c\
 		expand_env_variables.c\
 		expand_command.c\
-		hashtable_utils.c
+		hashtable_utils.c\
+		unset.c
 
 TEST_FILES = $(FILES)\
 			tests_utils_tokenizer.c\
@@ -50,7 +51,8 @@ TEST_FILES = $(FILES)\
 			tests_insert_hashtable.c\
 			tests_expand_env_variables.c\
 			tests_expand_command.c\
-			tests_remove_key.c
+			tests_remove_key.c\
+			tests_unset.c
 			
 
 SRC = main.c\

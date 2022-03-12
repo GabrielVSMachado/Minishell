@@ -1,18 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
+/*   unset.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gvitor-s <gvitor-s@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: gvitor-s <gvitor-s>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/12/23 20:41:35 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/03/12 19:50:39 by gvitor-s         ###   ########.fr       */
+/*   Created: 2022/03/11 20:52:04 by gvitor-s          #+#    #+#             */
+/*   Updated: 2022/03/12 19:48:46 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINISHELL_H
-# define MINISHELL_H
+#include "hashtable.h"
+#include "libft.h"
 
-int		pwd(void);
-void	unset(const char *key);
-#endif
+void	unset(const char	*key)
+{
+	struct s_keyval	*env;
+
+	env = remove_key(key);
+	if (NOT env)
+		return ;
+	free(env->key);
+	free(env->val);
+	free(env);
+	env = NULL;
+}
