@@ -4,6 +4,7 @@
 extern struct s_hashtbl g_envs;
 
 Test(destroy_hashtable, expected_g_envs_null){
+	init_hashtbl();
 	insert_hashtbl(strdup("pamonha"), strdup("de piracicaba"));
 	insert_hashtbl(strdup("queijo"), strdup("minas"));
 	insert_hashtbl(strdup("42"), strdup("sp"));

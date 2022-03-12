@@ -103,6 +103,7 @@ Test(expand_env_command, expected_result_eq_expected_value)
 	const char	*expected_value = "42sp";
 	char		*word = ft_strdup("$USER");
 
+	init_hashtbl();
 	insert_hashtbl(ft_strdup("USER"), ft_strdup("42sp"));
 	expand_env_variables(&word);
 	cr_assert_str_eq(word, expected_value);
@@ -113,6 +114,7 @@ Test(expand_env_command, expected_result_eq_expected_value_2) {
 	const char *expected_value = "\"42sp'gabriel42sp'\"";
 	char	*word = ft_strdup("\"$USER'gabriel$USER'\"");
 
+	init_hashtbl();
 	insert_hashtbl(ft_strdup("USER"), ft_strdup("42sp"));
 	expand_env_variables(&word);
 	cr_assert_str_eq(word, expected_value);
@@ -124,6 +126,7 @@ Test(expand_env_command, expected_result_eq_expected_value_3) {
 	const char *expected_value = "'$USER'";
 	char	*word = ft_strdup("'$USER'");
 
+	init_hashtbl();
 	insert_hashtbl(ft_strdup("USER"), ft_strdup("42sp"));
 	expand_env_variables(&word);
 	cr_assert_str_eq(word, expected_value);
@@ -135,6 +138,7 @@ Test(expand_env_command, expected_result_eq_expected_value_4) {
 	const char *expected_value = "\"42sp\"";
 	char	*word = ft_strdup("\"$USER\"");
 
+	init_hashtbl();
 	insert_hashtbl(ft_strdup("USER"), ft_strdup("42sp"));
 	expand_env_variables(&word);
 	cr_assert_str_eq(word, expected_value);
@@ -146,6 +150,7 @@ Test(expand_env_command, expected_result_eq_expected_value_5) {
 	const char *expected_value = "\"42sp\"";
 	char	*word = ft_strdup("\"42sp\"");
 
+	init_hashtbl();
 	insert_hashtbl(ft_strdup("USER"), ft_strdup("42sp"));
 	expand_env_variables(&word);
 	cr_assert_str_eq(word, expected_value);
@@ -157,6 +162,7 @@ Test(expand_env_command, expected_result_eq_expected_value_6) {
 	const char *expected_value = "echo\"42sp\"";
 	char	*word = ft_strdup("echo\"$USER\"");
 
+	init_hashtbl();
 	insert_hashtbl(ft_strdup("USER"), ft_strdup("42sp"));
 	expand_env_variables(&word);
 	cr_assert_str_eq(word, expected_value);
@@ -169,6 +175,7 @@ Test(expand_env_command, expected_result_eq_expected_value_7) {
 	const char *expected_value = "echo\"42sp\"";
 	char	*word = ft_strdup("echo\"$USER\"");
 
+	init_hashtbl();
 	insert_hashtbl(ft_strdup("USER"), ft_strdup("42sp"));
 	expand_env_variables(&word);
 	cr_assert_str_eq(word, expected_value);
@@ -180,6 +187,7 @@ Test(expand_env_command, expected_result_eq_expected_value_8) {
 	const char *expected_value = "echo42sp";
 	char	*word = ft_strdup("echo$USER");
 
+	init_hashtbl();
 	insert_hashtbl(ft_strdup("USER"), ft_strdup("42sp"));
 	expand_env_variables(&word);
 	cr_assert_str_eq(word, expected_value);
@@ -191,6 +199,7 @@ Test(expand_env_command, expected_result_eq_expected_value_9) {
 	const char *expected_value = "echo42sp42sp";
 	char	*word = ft_strdup("echo$USER$USER");
 
+	init_hashtbl();
 	insert_hashtbl(ft_strdup("USER"), ft_strdup("42sp"));
 	expand_env_variables(&word);
 	cr_assert_str_eq(word, expected_value);
@@ -202,6 +211,7 @@ Test(expand_env_command, expected_result_eq_expected_value_10) {
 	const char *expected_value = "echo42sp";
 	char	*word = ft_strdup("echo$US$ER$USER");
 
+	init_hashtbl();
 	insert_hashtbl(ft_strdup("USER"), ft_strdup("42sp"));
 	expand_env_variables(&word);
 	cr_assert_str_eq(word, expected_value);
@@ -213,6 +223,7 @@ Test(expand_env_command, expected_result_eq_expected_value_11) {
 	const char *expected_value = "\"42sp é legal\"";
 	char	*word = ft_strdup("\"$USER é legal\"");
 
+	init_hashtbl();
 	insert_hashtbl(ft_strdup("USER"), ft_strdup("42sp"));
 	expand_env_variables(&word);
 	cr_assert_str_eq(word, expected_value);
@@ -224,6 +235,7 @@ Test(expand_env_command, expected_result_eq_expected_value_12) {
 	const char *expected_value = "'$USER é legal'";
 	char	*word = ft_strdup("'$USER é legal'");
 
+	init_hashtbl();
 	insert_hashtbl(ft_strdup("USER"), ft_strdup("42sp"));
 	expand_env_variables(&word);
 	cr_assert_str_eq(word, expected_value);
@@ -235,6 +247,7 @@ Test(expand_env_command, expected_result_eq_expected_value_13) {
 	const char *expected_value = "9098USER é legal";
 	char	*word = ft_strdup("$$USER é legal");
 
+	init_hashtbl();
 	insert_hashtbl(ft_strdup("$"), ft_strdup("9098"));
 	expand_env_variables(&word);
 	cr_assert_str_eq(word, expected_value);
@@ -246,6 +259,7 @@ Test(expand_env_command, expected_result_eq_expected_value_14) {
 	const char *expected_value = "$=USER é legal";
 	char	*word = ft_strdup("$=USER é legal");
 
+	init_hashtbl();
 	insert_hashtbl(ft_strdup("$"), ft_strdup("9098"));
 	expand_env_variables(&word);
 	cr_assert_str_eq(word, expected_value);
@@ -257,6 +271,7 @@ Test(expand_env_command, expected_result_eq_expected_value_15) {
 	const char *expected_value = "$@USER é legal";
 	char	*word = ft_strdup("$@USER é legal");
 
+	init_hashtbl();
 	insert_hashtbl(ft_strdup("$"), ft_strdup("9098"));
 	expand_env_variables(&word);
 	cr_assert_str_eq(word, expected_value);
@@ -268,6 +283,7 @@ Test(expand_env_command, expected_result_eq_expected_value_16) {
 	const char *expected_value = "$(USER é legal";
 	char	*word = ft_strdup("$(USER é legal");
 
+	init_hashtbl();
 	insert_hashtbl(ft_strdup("$"), ft_strdup("9098"));
 	expand_env_variables(&word);
 	cr_assert_str_eq(word, expected_value);
@@ -279,6 +295,7 @@ Test(expand_env_command, expected_result_eq_expected_value_17) {
 	const char *expected_value = "$)USER é legal";
 	char	*word = ft_strdup("$)USER é legal");
 
+	init_hashtbl();
 	insert_hashtbl(ft_strdup("$"), ft_strdup("9098"));
 	expand_env_variables(&word);
 	cr_assert_str_eq(word, expected_value);
@@ -290,6 +307,7 @@ Test(expand_env_command, expected_result_eq_expected_value_18) {
 	const char *expected_value = "$*USER é legal";
 	char	*word = ft_strdup("$*USER é legal");
 
+	init_hashtbl();
 	insert_hashtbl(ft_strdup("$"), ft_strdup("9098"));
 	expand_env_variables(&word);
 	cr_assert_str_eq(word, expected_value);
@@ -301,6 +319,7 @@ Test(expand_env_command, expected_result_eq_expected_value_19) {
 	const char *expected_value = "massa$";
 	char	*word = ft_strdup("massa$");
 
+	init_hashtbl();
 	insert_hashtbl(ft_strdup("$"), ft_strdup("9098"));
 	expand_env_variables(&word);
 	cr_assert_str_eq(word, expected_value);
@@ -312,6 +331,7 @@ Test(expand_env_command, expected_result_eq_expected_value_20) {
 	const char *expected_value = "\"\"''";
 	char	*word = ft_strdup("\"\"$USER''");
 
+	init_hashtbl();
 	insert_hashtbl(ft_strdup("$"), ft_strdup("9098"));
 	expand_env_variables(&word);
 	cr_assert_str_eq(word, expected_value);
@@ -323,6 +343,7 @@ Test(expand_env_command, expected_result_eq_expected_value_21) {
 	const char *expected_value = "\"daora$\"massa";
 	char	*word = ft_strdup("\"daora$\"massa");
 
+	init_hashtbl();
 	insert_hashtbl(ft_strdup("$"), ft_strdup("9098"));
 	expand_env_variables(&word);
 	cr_assert_str_eq(word, expected_value);
