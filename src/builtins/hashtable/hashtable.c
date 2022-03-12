@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/05 16:48:33 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/03/09 14:28:52 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/03/12 17:55:56 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,29 @@ void	insert_hashtbl(const char *key, const char *value)
 			new_node_of_bucket((char *)key, (char *)value));
 		g_envs.size += 1;
 	}
+}
+
+struct s_keyval	**remove_key(const char *key)
+{
+	struct s_keyval	*prev;
+	struct s_keyval	*element;
+	struct s_keyval	**bucket;
+
+	prev = NULL;
+	if (NOT hashtbl_lookup(key))
+		return (NULL);
+	bucket = &g_envs.hashtbl[hash(key) % TBLSIZE];
+	element = *bucket;
+	while (element && ft_strcmp(key, element->key))
+	{
+		prev = element;
+		element = element->next;
+	}
+	if (NOT prev)
+		return (bucket);
+	prev->next = element->next;
+	element->next = NULL;
+	return ((struct s_keyval **)element);
 }
 
 void	destroy_hashtbl(void)

@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/07 14:54:06 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/03/09 13:54:56 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/03/12 17:56:04 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,12 @@ struct s_keyval
 
 struct	s_hashtbl
 {
-	struct s_keyval	*hashtbl[TBLSIZE];
+	struct s_keyval	**hashtbl;
 	unsigned int	size;
 };
 
+int					init_hashtbl(void);
+struct s_keyval		**remove_key(const char *key);
 struct s_keyval		*hashtbl_lookup(const char *key);
 void				insert_hashtbl(const char *key, const char *value);
 void				destroy_hashtbl(void);
