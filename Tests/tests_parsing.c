@@ -97,3 +97,24 @@ Test(parsing, expected_two_programs_with_one_with_name_null_and_one_with_tr)
 	cr_assert_str_eq(program->next->params->next->content, "'b'");
 	destroy_programs(&program);
 }
+
+Test(parsing, test_valid_command)
+{
+	const char *line = "cat | tr 'a' 'b' | wc -l < Makefile";
+	struct s_program	*program = NULL;
+	struct s_tokens		*tokens = NULL;
+	struct s_io			*tmp;
+
+	tokens = tokenizer(line);
+	program = parsing(tokens);
+	clear_tokens(&tokens);
+	cr_assert_str_eq(program->name, "cat");
+	cr_assert_str_eq(program->next->name, "tr");
+	cr_assert_str_eq(program->next->params->content, "'a'");
+	cr_assert_str_eq(program->next->params->next->content, "'b'");
+	cr_assert_str_eq(program->next->next->name, "wc");
+	cr_assert_str_eq(program->next->next->params->content, "-l");
+	tmp = (struct s_io *)program->next->next->infile->content;
+	cr_assert_str_eq(tmp->file, "Makefile");
+	cr_assert_eq(tmp->type, INFILE);
+}

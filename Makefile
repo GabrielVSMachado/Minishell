@@ -103,6 +103,6 @@ re: fclean all
 test: $(OBJDIR) $(LIBFT) $(OBJ_TEST)
 	$(CC) $(HEADERS) -g $(OBJ_TEST) -o $(TEST) $(LIBS) -lcriterion
 	@./$(TEST)
-	# @$(MAKE) fclean >  /dev/null
+	@$(MAKE) fclean >  /dev/null
 
 .PHONY: all re fclean clean test

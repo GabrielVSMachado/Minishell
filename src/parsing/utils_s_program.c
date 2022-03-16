@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 16:04:46 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/03/16 16:57:14 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/03/16 19:01:51 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ struct	s_program	*last_program(struct s_program *head)
 void	add_program(struct s_program **head, struct s_program *new)
 {
 	if (*head)
-		(*head)->next = new;
+		last_program(*head)->next = new;
 	else
 		*head = new;
 }
