@@ -18,7 +18,7 @@ TESTDIR		:=	Tests
 
 VPATH = $(SRCDIR):$(SRCDIR)/lexer:$(SRCDIR)/errors:$(TESTDIR)
 VPATH += $(SRCDIR)/expand:$(SRCDIR)/builtins/hashtable:$(SRCDIR)/builtins
-VPATH += $(SRCDIR)/parsing
+VPATH += $(SRCDIR)/parsing:$(SRCDIR)/executor
 
 #Libs
 LIBFT	=	$(LIBFTDIR)/libft.a
@@ -44,7 +44,8 @@ FILES = util_struct_tokens.c\
 		export.c\
 		utils_s_program.c\
 		parsing.c\
-		utils_parsing.c
+		utils_parsing.c\
+		check_path.c
 
 TEST_FILES = $(FILES)\
 			tests_utils_tokenizer.c\
@@ -61,7 +62,8 @@ TEST_FILES = $(FILES)\
 			tests_unset.c\
 			tests_export_functions.c\
 			tests_utils_s_program.c\
-			tests_parsing.c
+			tests_parsing.c\
+			tests_check_path.c
 
 SRC = main.c\
 	  $(FILES)
@@ -102,7 +104,7 @@ re: fclean all
 
 test: $(OBJDIR) $(LIBFT) $(OBJ_TEST)
 	$(CC) $(HEADERS) -g $(OBJ_TEST) -o $(TEST) $(LIBS) -lcriterion
-	@./$(TEST)
-	@$(MAKE) fclean >  /dev/null
+	@./test
+	@$(MAKE) fclean > /dev/null
 
 .PHONY: all re fclean clean test
