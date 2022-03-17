@@ -8,6 +8,7 @@ Test(check_tokens, expected_head_to_be_null) {
 	head = tokenizer(line);
 	head = check_tokens(&head);
 	cr_assert_null(head);
+	clear_tokens(&head);
 }
 
 Test(check_tokens, expected_head_to_be_null_because_of_amper_after_pipe) {
@@ -17,6 +18,7 @@ Test(check_tokens, expected_head_to_be_null_because_of_amper_after_pipe) {
 	head = tokenizer(line);
 	head = check_tokens(&head);
 	cr_assert_null(head);
+	clear_tokens(&head);
 }
 
 Test(check_tokens, expected_head_to_be_null_because_after_heredoc_needed_word) {
@@ -26,6 +28,7 @@ Test(check_tokens, expected_head_to_be_null_because_after_heredoc_needed_word) {
 	head = tokenizer(line);
 	head = check_tokens(&head);
 	cr_assert_null(head);
+	clear_tokens(&head);
 }
 
 Test(check_tokens, expected_head_to_be_null_because_after_rinput_need_word) {
@@ -35,6 +38,7 @@ Test(check_tokens, expected_head_to_be_null_because_after_rinput_need_word) {
 	head = tokenizer(line);
 	head = check_tokens(&head);
 	cr_assert_null(head);
+	clear_tokens(&head);
 }
 
 Test(check_tokens, expected_head_to_be_null_because_after_raoutput_need_word) {
@@ -44,6 +48,7 @@ Test(check_tokens, expected_head_to_be_null_because_after_raoutput_need_word) {
 	head = tokenizer(line);
 	head = check_tokens(&head);
 	cr_assert_null(head);
+	clear_tokens(&head);
 }
 
 Test(check_tokens, expected_head_to_be_not_null_with_valid_command) {
@@ -93,6 +98,7 @@ Test(check_tokens, expected_head_to_be_null_open_and_close_parenthesis_without_c
 	head = tokenizer(line);
 	head = check_tokens(&head);
 	cr_assert_null(head);
+	clear_tokens(&head);
 }
 
 Test(check_tokens, expected_head_to_be_null_because_alone_close_parenthesis) {
@@ -102,6 +108,7 @@ Test(check_tokens, expected_head_to_be_null_because_alone_close_parenthesis) {
 	head = tokenizer(line);
 	head = check_tokens(&head);
 	cr_assert_null(head);
+	clear_tokens(&head);
 }
 
 
@@ -112,6 +119,7 @@ Test(check_tokens, expected_head_to_be_null_because_unclosed_parenthesis) {
 	head = tokenizer(line);
 	head = check_tokens(&head);
 	cr_assert_null(head);
+	clear_tokens(&head);
 }
 
 Test(check_tokens, expected_head_to_be_null_because_parenthesis_after_pipe) {
@@ -121,6 +129,7 @@ Test(check_tokens, expected_head_to_be_null_because_parenthesis_after_pipe) {
 	head = tokenizer(line);
 	head = check_tokens(&head);
 	cr_assert_null(head);
+	clear_tokens(&head);
 }
 
 Test(check_tokens, expected_head_to_be_not_null_with_valid_command_5) {

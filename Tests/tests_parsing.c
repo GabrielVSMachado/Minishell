@@ -134,3 +134,26 @@ Test(parsing, expected_result_right) {
 	clear_tokens(&tokens);
 	destroy_programs(&prog);
 }
+
+Test(parsing, expected_result_right_1)
+{
+	const char	*line = "cat | cat | ls";
+	struct s_tokens	*tokens = NULL;
+	struct s_program	*program = NULL;
+	struct s_program	*tmp = NULL;
+	char	*const expected_result[] = {
+		"cat",
+		"cat",
+		"ls"
+	};
+
+	tokens = tokenizer(line);
+	program = parsing(tokens);
+	tmp = program;
+	for (int i = 0; i < 3; i++) {
+		cr_assert_str_eq(tmp->name, expected_result[i]);
+		tmp = tmp->next;
+	}
+	destroy_programs(&program);
+	clear_tokens(&tokens);
+}
