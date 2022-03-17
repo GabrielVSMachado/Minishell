@@ -1,5 +1,8 @@
 #include <criterion/criterion.h>
+#include <criterion/internal/assert.h>
+#include <criterion/internal/test.h>
 #include "parsing.h"
+#include "tokenizer.h"
 
 Test(parsing, expected_one_program_with_infile_makefile)
 {
@@ -117,4 +120,17 @@ Test(parsing, test_valid_command)
 	tmp = (struct s_io *)program->next->next->infile->content;
 	cr_assert_str_eq(tmp->file, "Makefile");
 	cr_assert_eq(tmp->type, INFILE);
+}
+
+Test(parsing, expected_result_right) {
+	const char	*line = "cat Makefile";
+	struct s_program	*prog = NULL;
+	struct s_tokens		*tokens = NULL;
+
+	tokens = tokenizer(line);
+	prog = parsing(tokens);
+	cr_assert_str_eq(prog->name, "cat");
+	cr_assert_str_eq(prog->params->content, "Makefile");
+	clear_tokens(&tokens);
+	destroy_programs(&prog);
 }
