@@ -2,7 +2,7 @@
 #include <criterion/internal/assert.h>
 #include <criterion/internal/test.h>
 #include <stdlib.h>
-#include "../headers/executor.h"
+#include "../src/executor/utils_exec.h"
 #include "hashtable.h"
 #include "parsing.h"
 #include "tokenizer.h"

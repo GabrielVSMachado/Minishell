@@ -45,7 +45,8 @@ FILES = util_struct_tokens.c\
 		utils_s_program.c\
 		parsing.c\
 		utils_parsing.c\
-		check_path.c
+		check_path.c\
+		utils_exec.c
 
 TEST_FILES = $(FILES)\
 			tests_utils_tokenizer.c\
@@ -63,7 +64,8 @@ TEST_FILES = $(FILES)\
 			tests_export_functions.c\
 			tests_utils_s_program.c\
 			tests_parsing.c\
-			tests_check_path.c
+			tests_check_path.c\
+			tests_utils_exec.c
 
 SRC = main.c\
 	  $(FILES)
