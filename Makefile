@@ -46,7 +46,8 @@ FILES = util_struct_tokens.c\
 		parsing.c\
 		utils_parsing.c\
 		check_path.c\
-		utils_exec.c
+		utils_exec.c\
+		heredoc.c
 
 TEST_FILES = $(FILES)\
 			tests_utils_tokenizer.c\
