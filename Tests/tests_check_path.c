@@ -26,3 +26,20 @@ Test(check_path, expected_path_of_command_cat)
 	destroy_programs(&program);
 	destroy_hashtbl();
 }
+
+Test(check_path, exepected_path_null) {
+	const char	*line = "asdfsafsa";
+	struct s_program	*prog = NULL;
+	struct s_tokens		*tokens = NULL;
+	char				*path = NULL;
+
+	init_hashtbl();
+	init_envs();
+	tokens = tokenizer(line);
+	prog = parsing(tokens);
+	path = check_path(prog->name);
+	cr_assert_null(path);
+	destroy_programs(&prog);
+	clear_tokens(&tokens);
+	destroy_hashtbl();
+}

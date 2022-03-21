@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/17 12:52:28 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/03/17 14:34:51 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/03/21 11:08:52 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,8 @@ char	*check_path(char const *program_name)
 	if (NOT path_env || NOT program_name)
 		return (NULL);
 	all_paths = ft_split(path_env->val, ':');
-	position = 0;
-	while (all_paths[position])
+	position = -1;
+	while (all_paths[++position])
 	{
 		tmp = ft_strjoin(all_paths[position], "/");
 		program_path = ft_strjoin(tmp, program_name);
@@ -38,7 +38,7 @@ char	*check_path(char const *program_name)
 		if (access(program_path, F_OK | X_OK) == 0)
 			break ;
 		free(program_path);
-		position += 1;
+		program_path = NULL;
 	}
 	position = -1;
 	while (all_paths[++position])
