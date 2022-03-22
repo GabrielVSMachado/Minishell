@@ -6,21 +6,43 @@
 /*   By: gvitor-s <gvitor-s>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/11 19:59:48 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/03/11 20:14:27 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/03/22 20:23:53 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "expand_str.h"
+#include "parsing.h"
 
-void	expand_command(struct s_tokens *head)
+void	expand_program(struct s_program *programs)
 {
-	while (head)
+	struct s_list		*tmp;
+	struct s_io			*content;
+
+	expand_command(&programs->name);
+	tmp = programs->infile;
+	while (tmp)
 	{
-		if (head->token == T_WORD)
-		{
-			expand_env_variables(&head->value);
-			expand_quotes(&head->value);
-		}
-		head = head->next;
+		content = (struct s_io *)tmp->content;
+		expand_command(&content->file);
+		tmp = tmp->next;
 	}
+	tmp = programs->outfile;
+	while (tmp)
+	{
+		content = (struct s_io *)tmp->content;
+		expand_command(&content->file);
+		tmp = tmp->next;
+	}
+	tmp = programs->params;
+	while (tmp)
+	{
+		expand_command((char **)&tmp->content);
+		tmp = tmp->next;
+	}
+}
+
+void	expand_command(char **word)
+{
+	expand_env_variables(word);
+	expand_quotes(word);
 }
