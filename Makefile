@@ -16,9 +16,17 @@ SRCDIR		:=	src
 HEADERDIR	:=	headers
 TESTDIR		:=	Tests
 
-VPATH = $(SRCDIR):$(SRCDIR)/lexer:$(SRCDIR)/errors:$(TESTDIR)
-VPATH += $(SRCDIR)/expand:$(SRCDIR)/builtins/hashtable:$(SRCDIR)/builtins
-VPATH += $(SRCDIR)/parsing:$(SRCDIR)/executor
+define VPATH
+	$(SRCDIR)
+	$(SRCDIR)/lexer
+	$(SRCDIR)/errors
+	$(SRCDIR)/expand
+	$(SRCDIR)/builtins/hashtable
+	$(SRCDIR)/builtins
+	$(SRCDIR)/parsing
+	$(SRCDIR)/executor
+	$(TESTDIR)
+endef
 
 #Libs
 LIBFT	=	$(LIBFTDIR)/libft.a
@@ -28,45 +36,55 @@ LIBS	=	-L$(LIBFTDIR) -lft -lreadline
 TEST	=	test
 
 #FILES
-FILES = util_struct_tokens.c\
-		tokenizer.c\
-		check_tokens.c\
-		err.c\
-		expand_quotes.c\
-		hashtable.c\
-		utils_keyval_lst.c\
-		utils_envs.c\
-		expand_env_variables.c\
-		expand_command.c\
-		hashtable_utils.c\
-		unset.c\
-		env.c\
-		export.c\
-		utils_s_program.c\
-		parsing.c\
-		utils_parsing.c\
-		check_path.c\
-		utils_exec.c\
-		heredoc.c
+define FILES
 
-TEST_FILES = $(FILES)\
-			tests_utils_tokenizer.c\
-			tests_treat_word.c\
-			tests_tokenizer.c\
-			tests_check_tokens.c\
-			tests_exp_quotes.c\
-			tests_destroy_hashtable.c\
-			tests_init_envs.c\
-			tests_insert_hashtable.c\
-			tests_expand_env_variables.c\
-			tests_expand_command.c\
-			tests_remove_key.c\
-			tests_unset.c\
-			tests_export_functions.c\
-			tests_utils_s_program.c\
-			tests_parsing.c\
-			tests_check_path.c\
-			tests_utils_exec.c
+	util_struct_tokens.c
+	tokenizer.c
+	check_tokens.c
+	err.c
+	expand_quotes.c
+	hashtable.c
+	utils_keyval_lst.c
+	utils_envs.c
+	expand_env_variables.c
+	expand_command.c
+	hashtable_utils.c
+	unset.c
+	env.c
+	export.c
+	utils_s_program.c
+	parsing.c
+	utils_parsing.c
+	check_path.c
+	utils_exec.c
+	heredoc.c
+	exec.c
+
+endef
+
+define	TEST_FILES
+
+	$(FILES)
+	tests_utils_tokenizer.c
+	tests_treat_word.c
+	tests_tokenizer.c
+	tests_check_tokens.c
+	tests_exp_quotes.c
+	tests_destroy_hashtable.c
+	tests_init_envs.c
+	tests_insert_hashtable.c
+	tests_expand_env_variables.c
+	tests_expand_command.c
+	tests_remove_key.c
+	tests_unset.c
+	tests_export_functions.c
+	tests_utils_s_program.c
+	tests_parsing.c
+	tests_check_path.c
+	tests_utils_exec.c
+	tests_gen_envp.c
+
+endef
 
 SRC = main.c\
 	  $(FILES)
