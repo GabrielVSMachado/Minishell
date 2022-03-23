@@ -59,6 +59,7 @@ define FILES
 	utils_exec.c
 	heredoc.c
 	exec.c
+	wait.c
 
 endef
 

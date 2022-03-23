@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/14 19:02:29 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/03/22 19:38:52 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/03/23 12:54:34 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,17 +44,17 @@ int	raise_error_on_export(int invalid_c)
 	return (-1);
 }
 
-void	reset_stdin_stdout(int tmp_in_out[2])
+void	reset_stdin_stdout(int tmpin, int tmpout)
 {
-	dup2(tmp_in_out[0], STDIN_FILENO);
-	close(tmp_in_out[0]);
-	dup2(tmp_in_out[1], STDOUT_FILENO);
-	close(tmp_in_out[1]);
+	dup2(tmpin, STDIN_FILENO);
+	close(tmpin);
+	dup2(tmpout, STDOUT_FILENO);
+	close(tmpout);
 }
 
-int	exit_errno(int tmp_in_out[2])
+int	exit_errno(int tmpin, int tmpout)
 {
-	reset_stdin_stdout(tmp_in_out);
+	reset_stdin_stdout(tmpin, tmpout);
 	garbage_collector(5);
 	perror(NULL);
 	insert_hashtbl("?", ft_itoa(errno));

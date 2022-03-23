@@ -1,19 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   executor.h                                         :+:      :+:    :+:   */
+/*   wait.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: gvitor-s <gvitor-s>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/03/17 14:08:15 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/03/20 21:08:08 by gvitor-s         ###   ########.fr       */
+/*   Created: 2022/03/23 13:27:54 by gvitor-s          #+#    #+#             */
+/*   Updated: 2022/03/23 13:29:10 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef EXECUTOR_H
-# define EXECUTOR_H
+#include "parsing.h"
+#include <sys/wait.h>
 
-# include "parsing.h"
+int	wait_all(struct s_program *program)
+{
+	int	exit_status;
 
-int	executor(struct s_program *programs);
-#endif
+	exit_status = 0;
+	while (program)
+	{
+		waitpid(program->pid, &exit_status, 0);
+		program = program->next;
+	}
+	return (exit_status);
+}

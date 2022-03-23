@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 14:57:57 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/03/16 16:32:11 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/03/21 16:32:27 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,12 @@
 
 # include "libft.h"
 # include "tokenizer.h"
+# include <sys/types.h>
 
 struct	s_program
 {
 	char				*name;
+	pid_t				pid;
 	t_list				*params;
 	t_list				*infile;
 	t_list				*outfile;

@@ -6,10 +6,12 @@
 /*   By: gvitor-s <gvitor-s>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/09 14:23:03 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/03/11 19:51:57 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/03/21 17:19:49 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "ft_stdlib.h"
+#include "ft_string.h"
 #include "hashtable.h"
 #include "libft.h"
 #include "error.h"
@@ -35,6 +37,7 @@ int	init_envs(void)
 		insert_hashtbl(key, ft_strdup(p_equal + 1));
 		tmp += 1;
 	}
+	insert_hashtbl(ft_strdup("?"), ft_itoa(0));
 	return (0);
 }
 
