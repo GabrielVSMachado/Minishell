@@ -25,6 +25,7 @@ define VPATH
 	$(SRCDIR)/builtins
 	$(SRCDIR)/parsing
 	$(SRCDIR)/executor
+	$(SRCDIR)/signals
 	$(TESTDIR)
 endef
 
@@ -60,6 +61,7 @@ define FILES
 	heredoc.c
 	exec.c
 	wait.c
+	signals.c
 
 endef
 
