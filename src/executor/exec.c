@@ -6,10 +6,11 @@
 /*   By: gvitor-s <gvitor-s>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/17 12:52:00 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/03/23 13:28:51 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/03/24 21:19:24 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "signals.h"
 #include "expand_str.h"
 #include "ft_stdio.h"
 #include "ft_stdlib.h"
@@ -19,6 +20,7 @@
 #include "parsing.h"
 #include "tokenizer.h"
 #include <asm-generic/errno-base.h>
+#include <signal.h>
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -69,10 +71,13 @@ static int	treat_infile(struct s_list *infile)
 
 static void	exec_child(struct s_program *programs, struct s_program **first_p)
 {
-	char		**envp;
-	char		*path;
-	char *const	*argv;
+	char				**envp;
+	char				*path;
+	char *const			*argv;
+	struct sigaction	s_sigaction;
 
+	s_sigaction = (struct sigaction){};
+	setup_signals(SIG_DFL, SIG_DFL, &s_sigaction);
 	expand_program(programs);
 	path = check_path(programs->name);
 	argv = gen_argv(programs->params, programs->name);
@@ -130,6 +135,7 @@ int	executor(struct s_program *programs)
 	struct s_exec		executor;
 	struct s_program	*tmp;
 
+	signal(SIGINT, SIG_IGN);
 	executor.tmpin = dup(STDIN_FILENO);
 	executor.tmpout = dup(STDOUT_FILENO);
 	if (NOT programs->infile)
