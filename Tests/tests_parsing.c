@@ -157,3 +157,35 @@ Test(parsing, expected_result_right_1)
 	destroy_programs(&program);
 	clear_tokens(&tokens);
 }
+
+Test(parsing, expected_result_right_2) {
+	const char	*line = "<< out tr a b | << in tr b a";
+	struct s_tokens	*tokens = NULL;
+	struct s_program	*program = NULL;
+	char	*const	expected_infile[] = {
+		"out",
+		"in"
+	};
+	char	*const	expected_params[] = {
+		"a",
+		"b",
+		"a"
+	};
+
+	tokens = tokenizer(line);
+	program = parsing(tokens);
+	clear_tokens(&tokens);
+	struct s_io	*tmp_2;
+	int i = 0;
+	int	j = 0;
+	for (struct s_program *tmp = program; tmp; tmp = tmp->next)
+	{
+		tmp_2 = (struct s_io *)tmp->infile->content;
+		cr_assert_str_eq(tmp->name, "tr");
+		cr_assert_eq(tmp_2->type, APPINFILE);
+		cr_assert_str_eq(tmp_2->file, expected_infile[i++]);
+		cr_assert_str_eq(tmp->params->content, expected_params[j]);
+		cr_assert_str_eq(tmp->params->next->content, expected_params[++j]);
+	}
+	destroy_programs(&program);
+}
