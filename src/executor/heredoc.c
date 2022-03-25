@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/19 13:19:30 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/03/19 16:29:28 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/03/24 22:07:23 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int	heredoc(struct s_io *infile)
 	save = errno;
 	(void)pipe(_pipe);
 	line = readline(">");
-	while (ft_strcmp(line, infile->file))
+	while (line && ft_strcmp(line, infile->file))
 	{
 		(void)ft_putendl_fd(line, _pipe[1]);
 		free(line);
