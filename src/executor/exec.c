@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/17 12:52:00 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/03/24 21:59:11 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/03/25 15:38:53 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,9 +74,8 @@ static void	exec_child(struct s_program *programs, struct s_program **first_p)
 	char				**envp;
 	char				*path;
 	char *const			*argv;
-	struct sigaction	s_sigaction;
 
-	setup_signals(SIG_DFL, SIG_DFL, &s_sigaction);
+	setup_signals(SIG_DFL, handler_exec);
 	expand_program(programs);
 	path = check_path(programs->name);
 	argv = gen_argv(programs->params, programs->name);
@@ -132,7 +131,7 @@ int	executor(struct s_program *programs)
 	struct s_exec		executor;
 	struct s_program	*tmp;
 
-	signal(SIGINT, SIG_IGN);
+	setup_signals(SIG_IGN, handler_exec);
 	executor.tmpin = dup(STDIN_FILENO);
 	executor.tmpout = dup(STDOUT_FILENO);
 	if (NOT programs->infile)

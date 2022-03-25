@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/23 20:41:00 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/03/24 21:28:06 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/03/25 15:30:36 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,13 +28,12 @@ int	main(void)
 	char				*line;
 	struct s_tokens		*tokens;
 	struct s_program	*programs;
-	struct sigaction	s_sigaction;
 
 	init_hashtbl();
 	init_envs();
 	while (TRUE)
 	{
-		setup_signals(SIG_IGN, handler_parent, &s_sigaction);
+		setup_signals(SIG_IGN, handler_parent);
 		line = readline("gvitor-s/f-tadeu@42sp[ minishell ]$ ");
 		if (NOT line)
 			return (0);
