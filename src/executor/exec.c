@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/17 12:52:00 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/03/24 21:19:24 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/03/24 21:42:23 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,6 @@ static void	exec_child(struct s_program *programs, struct s_program **first_p)
 	char *const			*argv;
 	struct sigaction	s_sigaction;
 
-	s_sigaction = (struct sigaction){};
 	setup_signals(SIG_DFL, SIG_DFL, &s_sigaction);
 	expand_program(programs);
 	path = check_path(programs->name);
@@ -95,9 +94,8 @@ static void	exec_child(struct s_program *programs, struct s_program **first_p)
 	free((void *)argv);
 	free(path);
 	delete_envp(envp);
-	destroy_hashtbl();
 	destroy_programs(first_p);
-	exit(errno);
+	return (destroy_hashtbl(), exit(errno));
 }
 
 static int	setup_to_exec(struct s_program *programs, struct s_exec *executor)
@@ -131,7 +129,6 @@ static int	setup_to_exec(struct s_program *programs, struct s_exec *executor)
 
 int	executor(struct s_program *programs)
 {
-	int					exit_status;
 	struct s_exec		executor;
 	struct s_program	*tmp;
 
@@ -154,6 +151,5 @@ int	executor(struct s_program *programs)
 		programs = programs->next;
 	}
 	reset_stdin_stdout(executor.tmpin, executor.tmpout);
-	exit_status = wait_all(tmp);
-	return (insert_hashtbl("?", ft_itoa(exit_status)), 0);
+	return (insert_hashtbl("?", ft_itoa(wait_all(tmp))), 0);
 }
