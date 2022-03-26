@@ -6,26 +6,20 @@
 /*   By: gvitor-s <gvitor-s>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/19 13:19:30 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/03/26 15:07:35 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/03/26 19:12:46 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "executor/utils_exec.h"
-#include "ft_stdio.h"
-#include "ft_string.h"
 #include "hashtable.h"
-#include "linked_list.h"
-#include "parsing.h"
 #include <signal.h>
 #include <stdio.h>
 #include <readline/readline.h>
-#include <stdlib.h>
 #include <sys/wait.h>
 #include <unistd.h>
 #include <errno.h>
-#include <fcntl.h>
 #include "expand_str.h"
 #include "signals.h"
+#include "executor/utils_exec.h"
 
 static void	heredoc_eof_abort_msg(char *delimiter)
 {
@@ -54,13 +48,41 @@ static int	heredoc(struct s_io *infile, int w_pipe)
 	return (0);
 }
 
+static int	exec_child_heredoc(struct s_program *programs,
+		struct s_program **tmp_programs, struct s_io *content)
+{
+	pid_t	pid;
+	int		exit_status;
+
+	exit_status = 0;
+	if (programs->h_pipe[0] != -1)
+		close(programs->h_pipe[0]);
+	pipe(programs->h_pipe);
+	handler_heredoc(*(unsigned long int *)tmp_programs);
+	pid = fork();
+	if (pid == 0)
+	{
+		setup_signals(SIG_IGN, handler_heredoc);
+		heredoc(content, programs->h_pipe[1]);
+		garbage_collector(3);
+		destroy_programs(tmp_programs);
+		destroy_hashtbl();
+		exit(0);
+	}
+	close(programs->h_pipe[1]);
+	wait(&exit_status);
+	if (WIFSIGNALED(exit_status))
+		return (WTERMSIG(exit_status) + 128);
+	return (WEXITSTATUS(exit_status));
+}
+
 int	exec_heredocs(struct s_program *programs)
 {
-	pid_t				pid;
 	t_list				*infile;
 	struct s_io			*content;
 	struct s_program	*tmp_programs;
 	int					save;
+	int					ext_code;
 
 	save = errno;
 	tmp_programs = programs;
@@ -72,26 +94,13 @@ int	exec_heredocs(struct s_program *programs)
 			content = infile->content;
 			if (content->type == APPINFILE)
 			{
-				if (programs->h_pipe[0] != -1)
-					close(programs->h_pipe[0]);
-				pipe(programs->h_pipe);
-				pid = fork();
-				if (pid == 0)
-				{
-					setup_signals(SIG_IGN, SIG_DFL);
-					heredoc(content, programs->h_pipe[1]);
-					garbage_collector(3);
-					destroy_programs(&tmp_programs);
-					destroy_hashtbl();
-					exit(0);
-				}
-				close(programs->h_pipe[1]);
-				wait(NULL);
+				ext_code = exec_child_heredoc(programs, &tmp_programs, content);
+				if (ext_code)
+					return (ext_code);
 			}
 			infile = infile->next;
 		}
 		programs = programs->next;
 	}
-	errno = save;
-	return (0);
+	return (errno = save, 0);
 }
