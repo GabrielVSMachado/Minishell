@@ -6,20 +6,26 @@
 /*   By: gvitor-s <gvitor-s>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/19 13:19:30 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/03/25 14:35:32 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/03/26 15:07:35 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "executor/utils_exec.h"
 #include "ft_stdio.h"
 #include "ft_string.h"
+#include "hashtable.h"
+#include "linked_list.h"
 #include "parsing.h"
+#include <signal.h>
 #include <stdio.h>
 #include <readline/readline.h>
 #include <stdlib.h>
+#include <sys/wait.h>
 #include <unistd.h>
 #include <errno.h>
 #include <fcntl.h>
 #include "expand_str.h"
+#include "signals.h"
 
 static void	heredoc_eof_abort_msg(char *delimiter)
 {
@@ -30,27 +36,62 @@ static void	heredoc_eof_abort_msg(char *delimiter)
 	ft_putendl_fd(")", STDERR_FILENO);
 }
 
-int	heredoc(struct s_io *infile)
+static int	heredoc(struct s_io *infile, int w_pipe)
 {
-	int		_pipe[2];
 	char	*line;
-	int		save;
 
 	expand_quotes(&infile->file);
-	save = errno;
-	(void)pipe(_pipe);
-	line = readline(">");
+	line = readline("> ");
 	while (line && ft_strcmp(line, infile->file))
 	{
-		(void)ft_putendl_fd(line, _pipe[1]);
+		(void)ft_putendl_fd(line, w_pipe);
 		free(line);
-		line = readline(">");
+		line = readline("> ");
 	}
 	if (line == NULL)
 		heredoc_eof_abort_msg(infile->file);
 	free(line);
-	line = NULL;
-	(void)close(_pipe[1]);
+	return (0);
+}
+
+int	exec_heredocs(struct s_program *programs)
+{
+	pid_t				pid;
+	t_list				*infile;
+	struct s_io			*content;
+	struct s_program	*tmp_programs;
+	int					save;
+
+	save = errno;
+	tmp_programs = programs;
+	while (programs)
+	{
+		infile = programs->infile;
+		while (infile)
+		{
+			content = infile->content;
+			if (content->type == APPINFILE)
+			{
+				if (programs->h_pipe[0] != -1)
+					close(programs->h_pipe[0]);
+				pipe(programs->h_pipe);
+				pid = fork();
+				if (pid == 0)
+				{
+					setup_signals(SIG_IGN, SIG_DFL);
+					heredoc(content, programs->h_pipe[1]);
+					garbage_collector(3);
+					destroy_programs(&tmp_programs);
+					destroy_hashtbl();
+					exit(0);
+				}
+				close(programs->h_pipe[1]);
+				wait(NULL);
+			}
+			infile = infile->next;
+		}
+		programs = programs->next;
+	}
 	errno = save;
-	return (_pipe[0]);
+	return (0);
 }

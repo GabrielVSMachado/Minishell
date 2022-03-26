@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 14:57:57 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/03/21 16:32:27 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/03/26 12:55:26 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ struct	s_program
 {
 	char				*name;
 	pid_t				pid;
+	int					h_pipe[2];
 	t_list				*params;
 	t_list				*infile;
 	t_list				*outfile;

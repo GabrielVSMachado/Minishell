@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 16:04:46 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/03/21 16:32:02 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/03/26 11:49:14 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,8 @@ struct s_program	*new_program(char *name)
 		return (NULL);
 	new_p->name = name;
 	new_p->pid = 0;
+	new_p->h_pipe[0] = -1;
+	new_p->h_pipe[1] = -1;
 	new_p->infile = NULL;
 	new_p->params = NULL;
 	new_p->outfile = NULL;

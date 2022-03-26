@@ -189,3 +189,23 @@ Test(parsing, expected_result_right_2) {
 	}
 	destroy_programs(&program);
 }
+
+Test(parsing, expected_result_right_3) {
+	const	char	*line = "<< out << gabriel tr a b";
+	struct s_program	*program = NULL;
+	struct s_tokens		*toke = NULL;
+	struct s_io			*tmp = NULL;
+
+	toke = tokenizer(line);
+	program = parsing(toke);
+	clear_tokens(&toke);
+	cr_assert_str_eq(program->name, "tr");
+	cr_assert_str_eq(program->params->content, "a");
+	cr_assert_str_eq(program->params->next->content, "b");
+	tmp = program->infile->content;
+	cr_assert_str_eq(tmp->file, "out");
+	cr_assert_eq(tmp->type, APPINFILE);
+	tmp = program->infile->next->content;
+	cr_assert_str_eq(tmp->file, "gabriel");
+	cr_assert_eq(tmp->type, APPINFILE);
+}
