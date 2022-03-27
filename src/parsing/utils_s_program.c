@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 16:04:46 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/03/26 22:24:42 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/03/27 00:58:36 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ static void	clear_struct_io(void *content)
 	tmp = (struct s_io *)content;
 	free(tmp->file);
 	tmp->type = 0;
-	free(content);
+	free(tmp);
 	content = NULL;
 }
 

@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/19 13:19:30 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/03/26 19:12:46 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/03/27 13:18:25 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 #include <unistd.h>
 #include <errno.h>
 #include "expand_str.h"
+#include "parsing.h"
 #include "signals.h"
 #include "executor/utils_exec.h"
 
@@ -51,28 +52,29 @@ static int	heredoc(struct s_io *infile, int w_pipe)
 static int	exec_child_heredoc(struct s_program *programs,
 		struct s_program **tmp_programs, struct s_io *content)
 {
-	pid_t	pid;
-	int		exit_status;
+	pid_t			pid;
+	int				exit_status;
+	void			*handler;
 
 	exit_status = 0;
 	if (programs->h_pipe[0] != -1)
 		close(programs->h_pipe[0]);
 	pipe(programs->h_pipe);
-	handler_heredoc(*(unsigned long int *)tmp_programs);
 	pid = fork();
 	if (pid == 0)
 	{
-		setup_signals(SIG_IGN, handler_heredoc);
+		handler_heredoc(0, tmp_programs);
+		handler = &handler_heredoc;
+		setup_signal(SIGINT, (__sighandler_t)handler);
+		setup_signal(SIGQUIT, SIG_IGN);
 		heredoc(content, programs->h_pipe[1]);
-		garbage_collector(3);
+		clear_fds_on_programs(*tmp_programs);
 		destroy_programs(tmp_programs);
 		destroy_hashtbl();
 		exit(0);
 	}
 	close(programs->h_pipe[1]);
 	wait(&exit_status);
-	if (WIFSIGNALED(exit_status))
-		return (WTERMSIG(exit_status) + 128);
 	return (WEXITSTATUS(exit_status));
 }
 
@@ -81,11 +83,9 @@ int	exec_heredocs(struct s_program *programs)
 	t_list				*infile;
 	struct s_io			*content;
 	struct s_program	*tmp_programs;
-	int					save;
-	int					ext_code;
 
-	save = errno;
 	tmp_programs = programs;
+	setup_signal(SIGINT, handler_exec);
 	while (programs)
 	{
 		infile = programs->infile;
@@ -94,13 +94,12 @@ int	exec_heredocs(struct s_program *programs)
 			content = infile->content;
 			if (content->type == APPINFILE)
 			{
-				ext_code = exec_child_heredoc(programs, &tmp_programs, content);
-				if (ext_code)
-					return (ext_code);
+				if (exec_child_heredoc(programs, &tmp_programs, content) != 0)
+					return (-1);
 			}
 			infile = infile->next;
 		}
 		programs = programs->next;
 	}
-	return (errno = save, 0);
+	return (0);
 }

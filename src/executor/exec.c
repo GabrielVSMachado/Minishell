@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/17 12:52:00 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/03/26 22:31:09 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/03/27 13:12:23 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,8 @@ static void	exec_child(struct s_program *programs, struct s_program **first_p,
 	char				*path;
 	char *const			*argv;
 
-	setup_signals(SIG_DFL, handler_exec);
+	setup_signal(SIGQUIT, SIG_DFL);
+	setup_signal(SIGINT, SIG_DFL);
 	expand_program(programs);
 	path = check_path(programs->name);
 	argv = gen_argv(programs->params, programs->name);
@@ -90,8 +91,7 @@ static void	exec_child(struct s_program *programs, struct s_program **first_p,
 	clear_fds_on_programs(*first_p);
 	close(exec->tmpin);
 	close(exec->tmpout);
-	close(exec->_pipe[0]);
-	close(exec->_pipe[1]);
+	close(exec->fdin);
 	if (path)
 		execve(path, argv, envp);
 	else
@@ -101,11 +101,12 @@ static void	exec_child(struct s_program *programs, struct s_program **first_p,
 		ft_putchar_fd(':', 2);
 		ft_putendl_fd(" command not found", 2);
 	}
-	free((void *)argv);
 	free(path);
+	free((void *)argv);
 	delete_envp(envp);
 	destroy_programs(first_p);
-	return (destroy_hashtbl(), exit(127));
+	destroy_hashtbl();
+	exit(127);
 }
 
 static int	setup_to_exec(struct s_program *programs, struct s_exec *executor)
@@ -142,7 +143,7 @@ int	executor(struct s_program *programs)
 	struct s_exec		exec;
 	struct s_program	*tmp;
 
-	setup_signals(SIG_IGN, handler_exec);
+	setup_signal(SIGINT, handler_exec);
 	exec.tmpin = dup(STDIN_FILENO);
 	exec.tmpout = dup(STDOUT_FILENO);
 	if (NOT programs->infile)
