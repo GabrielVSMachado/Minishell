@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/17 12:52:00 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/03/27 13:12:23 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/03/27 13:36:56 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,12 +95,7 @@ static void	exec_child(struct s_program *programs, struct s_program **first_p,
 	if (path)
 		execve(path, argv, envp);
 	else
-	{
-		ft_putstr_fd("minishell: ", 2);
-		ft_putstr_fd(programs->name, 2);
-		ft_putchar_fd(':', 2);
-		ft_putendl_fd(" command not found", 2);
-	}
+		print_msg_command_not_found(programs->name);
 	free(path);
 	free((void *)argv);
 	delete_envp(envp);

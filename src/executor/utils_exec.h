@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/19 12:08:24 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/03/26 22:23:03 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/03/27 13:36:34 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ struct s_exec
 	int	_pipe[2];
 };
 
+void		print_msg_command_not_found(char *name);
 int			exec_heredocs(struct s_program *programs);
 int			wait_all(struct s_program *program);
 void		clear_fds_on_programs(struct s_program *programs);

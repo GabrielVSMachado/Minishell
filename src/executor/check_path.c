@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/17 12:52:28 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/03/21 11:08:52 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/03/27 13:36:13 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,14 @@
 #include "tokenizer.h"
 #include <stdlib.h>
 #include <unistd.h>
+
+void	print_msg_command_not_found(char *name)
+{
+	ft_putstr_fd("minishell: ", STDERR_FILENO);
+	ft_putstr_fd(name, STDERR_FILENO);
+	ft_putchar_fd(':', STDERR_FILENO);
+	ft_putendl_fd(" command not found", STDERR_FILENO);
+}
 
 char	*check_path(char const *program_name)
 {
