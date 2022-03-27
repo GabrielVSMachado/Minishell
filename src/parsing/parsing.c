@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 14:55:01 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/03/17 14:57:02 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/03/27 13:57:27 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,13 +36,16 @@ static void	parsing_program(struct s_program **program, struct s_tokens **head)
 
 	last = last_program(*program);
 	if (last && NOT last->name)
+	{
 		last->name = ft_strdup((*head)->value);
-	else
+		*head = (*head)->next;
+	}
+	else if (NOT (*program))
 	{
 		add_program(program, new_program(ft_strdup((*head)->value)));
+		*head = (*head)->next;
 		last = last_program(*program);
 	}
-	*head = (*head)->next;
 	while (*head && (*head)->token == T_WORD)
 	{
 		ft_lstadd_back(&last->params, ft_lstnew(ft_strdup((*head)->value)));

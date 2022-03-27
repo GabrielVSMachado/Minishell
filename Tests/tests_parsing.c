@@ -1,6 +1,7 @@
 #include <criterion/criterion.h>
 #include <criterion/internal/assert.h>
 #include <criterion/internal/test.h>
+#include "linked_list.h"
 #include "parsing.h"
 #include "tokenizer.h"
 
@@ -208,4 +209,29 @@ Test(parsing, expected_result_right_3) {
 	tmp = program->infile->next->content;
 	cr_assert_str_eq(tmp->file, "gabriel");
 	cr_assert_eq(tmp->type, APPINFILE);
+}
+
+Test(parsing, expected_result_right_4)
+{
+	char	*const line = "echo gabriel > tr a b";
+	struct s_program	*program = NULL;
+	struct s_tokens		*tokens = NULL;
+	char	*const	expected_params[] = {
+		"gabriel",
+		"a",
+		"b"
+	};
+
+	tokens = tokenizer(line);
+	program = parsing(tokens);
+	cr_assert_str_eq(program->name, "echo");
+	cr_assert_str_eq(
+			((struct s_io *)program->outfile->content)->file,
+			"tr");
+	cr_assert_eq(((struct s_io *)program->outfile->content)->type, OUTFILE);
+	int i = 0;
+	for (t_list *tmp = program->params; tmp; tmp = tmp->next) {
+		cr_assert_str_eq(tmp->content, expected_params[i++]);
+	}
+	destroy_programs(&program);
 }
