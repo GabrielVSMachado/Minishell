@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/19 11:44:37 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/03/22 19:37:45 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/03/26 22:22:26 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 #include <stdlib.h>
 #include "hashtable.h"
 #include <errno.h>
+#include <unistd.h>
 
 extern struct s_hashtbl	g_envs;
 
@@ -93,14 +94,14 @@ void	delete_envp(char **envp)
 	envp = NULL;
 }
 
-void	garbage_collector(int init_fd)
+void	clear_fds_on_programs(struct s_program *programs)
 {
-	int	fd;
-	int	saved;
-
-	fd = init_fd;
-	saved = errno;
-	while (errno != EBADF)
-		(void)close(fd++);
-	errno = saved;
+	while (programs)
+	{
+		if (programs->h_pipe[0] != -1)
+			close(programs->h_pipe[0]);
+		if (programs->h_pipe[1] != -1)
+			close(programs->h_pipe[1]);
+		programs = programs->next;
+	}
 }

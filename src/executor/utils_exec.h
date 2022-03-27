@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/19 12:08:24 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/03/26 14:43:29 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/03/26 22:23:03 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ struct s_exec
 
 int			exec_heredocs(struct s_program *programs);
 int			wait_all(struct s_program *program);
-void		garbage_collector(int init_fd);
+void		clear_fds_on_programs(struct s_program *programs);
 char *const	*gen_argv(t_list *params, char *name);
 char		**gen_envp(void);
 void		delete_envp(char **envp);

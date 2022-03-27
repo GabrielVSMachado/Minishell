@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/14 19:02:29 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/03/23 12:54:34 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/03/26 22:25:12 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,6 @@ void	reset_stdin_stdout(int tmpin, int tmpout)
 int	exit_errno(int tmpin, int tmpout)
 {
 	reset_stdin_stdout(tmpin, tmpout);
-	garbage_collector(5);
 	perror(NULL);
 	insert_hashtbl("?", ft_itoa(errno));
 	return (errno);

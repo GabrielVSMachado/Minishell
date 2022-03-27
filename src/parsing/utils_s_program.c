@@ -6,13 +6,15 @@
 /*   By: gvitor-s <gvitor-s>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 16:04:46 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/03/26 11:49:14 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/03/26 22:24:42 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include "parsing.h"
+#include "executor/utils_exec.h"
 #include <stdlib.h>
+#include <unistd.h>
 
 struct s_program	*new_program(char *name)
 {
@@ -68,6 +70,7 @@ void	destroy_programs(struct s_program **head)
 {
 	struct s_program	*tmp;
 
+	clear_fds_on_programs(*head);
 	while (*head)
 	{
 		tmp = (*head)->next;

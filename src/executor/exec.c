@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/17 12:52:00 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/03/25 15:38:53 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/03/26 22:31:09 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,28 +48,35 @@ static int	treat_outfile(struct s_list *outfile)
 	return (fdout);
 }
 
-static int	treat_infile(struct s_list *infile)
+static int	treat_infile(struct s_list *infile, int r_pipe)
 {
 	int			fdin;
 	struct s_io	*tmp;
 
+	fdin = -1;
 	while (infile)
 	{
 		tmp = (struct s_io *)infile->content;
-		if (tmp->type == APPINFILE)
+		if (tmp->type != APPINFILE)
 		{
-			fdin = heredoc(tmp);
-			if (infile->next)
+			if (r_pipe != -1)
+			{
+				close(r_pipe);
+				r_pipe = -1;
+			}
+			if (fdin != -1)
 				close(fdin);
+			fdin = open(tmp->file, O_RDONLY | O_CLOEXEC);
 		}
 		infile = infile->next;
 	}
-	if (tmp->type != APPINFILE)
-		fdin = open(tmp->file, O_RDONLY | O_CLOEXEC);
+	if (fdin == -1)
+		fdin = r_pipe;
 	return (fdin);
 }
 
-static void	exec_child(struct s_program *programs, struct s_program **first_p)
+static void	exec_child(struct s_program *programs, struct s_program **first_p,
+		struct s_exec *exec)
 {
 	char				**envp;
 	char				*path;
@@ -80,7 +87,11 @@ static void	exec_child(struct s_program *programs, struct s_program **first_p)
 	path = check_path(programs->name);
 	argv = gen_argv(programs->params, programs->name);
 	envp = gen_envp();
-	garbage_collector(3);
+	clear_fds_on_programs(*first_p);
+	close(exec->tmpin);
+	close(exec->tmpout);
+	close(exec->_pipe[0]);
+	close(exec->_pipe[1]);
 	if (path)
 		execve(path, argv, envp);
 	else
@@ -100,7 +111,7 @@ static void	exec_child(struct s_program *programs, struct s_program **first_p)
 static int	setup_to_exec(struct s_program *programs, struct s_exec *executor)
 {
 	if (programs->infile)
-		executor->fdin = treat_infile(programs->infile);
+		executor->fdin = treat_infile(programs->infile, programs->h_pipe[0]);
 	if (executor->fdin < 0)
 		return (exit_errno(executor->tmpin, executor->tmpout));
 	dup2(executor->fdin, STDIN_FILENO);
@@ -128,27 +139,27 @@ static int	setup_to_exec(struct s_program *programs, struct s_exec *executor)
 
 int	executor(struct s_program *programs)
 {
-	struct s_exec		executor;
+	struct s_exec		exec;
 	struct s_program	*tmp;
 
 	setup_signals(SIG_IGN, handler_exec);
-	executor.tmpin = dup(STDIN_FILENO);
-	executor.tmpout = dup(STDOUT_FILENO);
+	exec.tmpin = dup(STDIN_FILENO);
+	exec.tmpout = dup(STDOUT_FILENO);
 	if (NOT programs->infile)
-		executor.fdin = dup(executor.tmpin);
+		exec.fdin = dup(exec.tmpin);
 	tmp = programs;
 	while (programs)
 	{
-		if (setup_to_exec(programs, &executor))
-			return (exit_errno(executor.tmpin, executor.tmpout));
+		if (setup_to_exec(programs, &exec))
+			return (exit_errno(exec.tmpin, exec.tmpout));
 		if (programs->name)
 		{
 			programs->pid = fork();
 			if (programs->pid == 0)
-				exec_child(programs, &tmp);
+				exec_child(programs, &tmp, &exec);
 		}
 		programs = programs->next;
 	}
-	reset_stdin_stdout(executor.tmpin, executor.tmpout);
+	reset_stdin_stdout(exec.tmpin, exec.tmpout);
 	return (insert_hashtbl("?", ft_itoa(wait_all(tmp))), 0);
 }
