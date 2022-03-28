@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/17 12:52:00 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/03/28 16:32:45 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/03/28 20:01:56 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,6 @@ static void	exec_child(struct s_program *programs, struct s_program **first_p,
 
 	setup_signal(SIGQUIT, SIG_DFL);
 	setup_signal(SIGINT, SIG_DFL);
-	expand_program(programs);
 	path = check_path(programs->name);
 	argv = gen_argv(programs->params, programs->name);
 	envp = gen_envp();
@@ -138,6 +137,7 @@ int	executor(struct s_program *programs)
 {
 	struct s_exec		exec;
 	struct s_program	*tmp;
+	int					exit_status;
 
 	setup_signal(SIGINT, handler_exec);
 	exec.tmpin = dup(STDIN_FILENO);
@@ -151,12 +151,18 @@ int	executor(struct s_program *programs)
 			return (exit_errno(exec.tmpin, exec.tmpout));
 		if (programs->name)
 		{
-			programs->pid = fork();
-			if (programs->pid == 0)
-				exec_child(programs, &tmp, &exec);
+			if (is_builtin(programs))
+				exit_status = exec_builtin(programs, &tmp);
+			else
+			{
+				programs->pid = fork();
+				if (programs->pid == 0)
+					exec_child(programs, &tmp, &exec);
+			}
 		}
 		programs = programs->next;
 	}
 	reset_stdin_stdout(exec.tmpin, exec.tmpout);
-	return (insert_hashtbl("?", ft_itoa(wait_all(tmp))), 0);
+	exit_status = wait_all(tmp);
+	return (insert_hashtbl("?", ft_itoa(exit_status)), 0);
 }

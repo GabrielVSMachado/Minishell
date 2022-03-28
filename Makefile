@@ -65,6 +65,8 @@ define FILES
 	exit.c
 	cd.c
 	echo.c
+	builtin.c
+	pwd.c
 endef
 
 define	TEST_FILES

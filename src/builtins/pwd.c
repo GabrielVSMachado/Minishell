@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/10 11:05:26 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/01/10 11:05:26 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/03/28 19:36:22 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,9 +33,9 @@ int	pwd(void)
 	{
 		ft_putendl_fd(strerror(errno), STDERR_FILENO);
 		free(cwd);
-		return (ERROR);
+		return (1);
 	}
 	ft_putendl_fd(cwd, STDOUT_FILENO);
 	free(cwd);
-	return (SUCCESS);
+	return (0);
 }
