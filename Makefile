@@ -64,6 +64,7 @@ define FILES
 	signals.c
 	exit.c
 	cd.c
+	echo.c
 endef
 
 define	TEST_FILES
@@ -88,6 +89,7 @@ define	TEST_FILES
 	tests_utils_exec.c
 	tests_gen_envp.c
 	tests_cd.c
+	tests_echo.c
 endef
 
 SRC = main.c\
