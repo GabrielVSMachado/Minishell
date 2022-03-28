@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/17 12:52:00 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/03/27 13:36:56 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/03/28 16:32:45 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,8 @@ static int	treat_outfile(struct s_list *outfile)
 	{
 		tmp = (struct s_io *)outfile->content;
 		fdout = open(tmp->file, O_WRONLY | O_APPEND * (tmp->type == APPOUTFILE)
-				| O_CREAT | O_CLOEXEC, S_IWUSR | S_IRUSR | S_IRGRP | S_IROTH);
+				| O_TRUNC * (tmp->type != APPOUTFILE) | O_CREAT | O_CLOEXEC,
+				S_IWUSR | S_IRUSR | S_IRGRP | S_IROTH);
 		outfile = outfile->next;
 		if (outfile)
 			close(fdout);
