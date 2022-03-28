@@ -1,23 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
+/*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gvitor-s <gvitor-s@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: gvitor-s <gvitor-s>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/12/23 20:41:35 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/03/27 19:51:18 by gvitor-s         ###   ########.fr       */
+/*   Created: 2022/03/27 19:47:37 by gvitor-s          #+#    #+#             */
+/*   Updated: 2022/03/27 19:52:44 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINISHELL_H
-# define MINISHELL_H
+#include "hashtable.h"
+#include "parsing.h"
+#include <stdlib.h>
 
-# include "parsing.h"
-
-int		pwd(void);
-void	env(void);
-void	unset(const char *key);
-int		export(const char *word);
-void	__exit(struct s_program *programs);
-#endif
+void	__exit(struct s_program *program)
+{
+	destroy_hashtbl();
+	if (program)
+		destroy_programs(&program);
+	exit(EXIT_SUCCESS);
+}

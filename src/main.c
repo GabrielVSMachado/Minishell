@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/23 20:41:00 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/03/27 13:22:44 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/03/27 19:51:49 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 #include <readline/history.h>
 #include <readline/readline.h>
 #include <stdlib.h>
+#include "minishell.h"
 
 int	main(void)
 {
@@ -39,7 +40,7 @@ int	main(void)
 		setup_signal(SIGINT, handler_parent);
 		line = readline("gvitor-s/f-tadeu@42sp[ minishell ]$ ");
 		if (NOT line)
-			return (0);
+			__exit(NULL);
 		tokens = tokenizer(line);
 		free(line);
 		programs = parsing(tokens);

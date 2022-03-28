@@ -62,6 +62,7 @@ define FILES
 	exec.c
 	wait.c
 	signals.c
+	exit.c
 
 endef
 
