@@ -1,4 +1,5 @@
 #include <criterion/criterion.h>
+#include <criterion/redirect.h>
 #include "libft.h"
 #include "tokenizer.h"
 #include "error.h"
@@ -168,7 +169,7 @@ Test(treat_words,
 }
 
 Test(treat_words,
-		expected_head_is_null_when_has_unclosed_quotes_and_ret_is_negative) {
+		expected_head_is_null_when_has_unclosed_quotes_and_ret_is_negative, .init=cr_redirect_stderr) {
 	struct s_tokens	*head = NULL;
 	unsigned int	cursor = 0;
 	char const 		*line = "Mini'shell";

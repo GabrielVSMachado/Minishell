@@ -1,6 +1,7 @@
 #include <criterion/criterion.h>
 #include <criterion/internal/assert.h>
 #include <criterion/internal/test.h>
+#include <criterion/redirect.h>
 #include "hashtable.h"
 #include "minishell.h"
 #include "libft.h"
@@ -66,7 +67,7 @@ Test(check_valid_key, expected_result_eq_difference_char)
 	cr_assert_eq(result, '-');
 }
 
-Test(export, expected_key_on_envs) {
+Test(export, expected_key_on_envs, .init=cr_redirect_stderr) {
 	struct s_program *prog = NULL;
 	struct s_tokens	*tokens = NULL;
 
@@ -84,7 +85,7 @@ Test(export, expected_key_on_envs) {
 	destroy_programs(&prog);
 }
 
-Test(export, expected_key_on_envs_1) {
+Test(export, expected_key_on_envs_1, .init=cr_redirect_stderr) {
 	struct s_program	*prog;
 	struct s_tokens		*t;
 

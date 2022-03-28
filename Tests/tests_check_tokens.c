@@ -1,7 +1,8 @@
 #include <criterion/criterion.h>
+#include <criterion/redirect.h>
 #include "tokenizer.h"
 
-Test(check_tokens, expected_head_to_be_null) {
+Test(check_tokens, expected_head_to_be_null, .init=cr_redirect_stderr) {
 	const char		*line = "( cat Makefile";
 	struct s_tokens *head = NULL;
 
@@ -11,7 +12,7 @@ Test(check_tokens, expected_head_to_be_null) {
 	clear_tokens(&head);
 }
 
-Test(check_tokens, expected_head_to_be_null_because_of_amper_after_pipe) {
+Test(check_tokens, expected_head_to_be_null_because_of_amper_after_pipe, .init=cr_redirect_stderr) {
 	const char	*line = "valgrind ./test |& cat -e ";
 	struct s_tokens *head = NULL;
 
@@ -21,7 +22,7 @@ Test(check_tokens, expected_head_to_be_null_because_of_amper_after_pipe) {
 	clear_tokens(&head);
 }
 
-Test(check_tokens, expected_head_to_be_null_because_after_heredoc_needed_word) {
+Test(check_tokens, expected_head_to_be_null_because_after_heredoc_needed_word, .init=cr_redirect_stderr) {
 	const char	*line = "<< (cat Makefile)";
 	struct s_tokens *head = NULL;
 
@@ -31,7 +32,7 @@ Test(check_tokens, expected_head_to_be_null_because_after_heredoc_needed_word) {
 	clear_tokens(&head);
 }
 
-Test(check_tokens, expected_head_to_be_null_because_after_rinput_need_word) {
+Test(check_tokens, expected_head_to_be_null_because_after_rinput_need_word, .init=cr_redirect_stderr) {
 	const char	*line = "tr 'a' 'b' < (cat Makefile)";
 	struct s_tokens	*head = NULL;
 
@@ -41,7 +42,7 @@ Test(check_tokens, expected_head_to_be_null_because_after_rinput_need_word) {
 	clear_tokens(&head);
 }
 
-Test(check_tokens, expected_head_to_be_null_because_after_raoutput_need_word) {
+Test(check_tokens, expected_head_to_be_null_because_after_raoutput_need_word, .init=cr_redirect_stderr) {
 	const char	*line = "cat Makefile >> | tr 'a' 'b'";
 	struct s_tokens *head = NULL;
 
@@ -91,7 +92,7 @@ Test(check_tokens, expected_head_to_be_not_null_with_valid_command_4) {
 	clear_tokens(&head);
 }
 
-Test(check_tokens, expected_head_to_be_null_open_and_close_parenthesis_without_content) {
+Test(check_tokens, expected_head_to_be_null_open_and_close_parenthesis_without_content, .init=cr_redirect_stderr) {
 	const char *line = "()";
 	struct s_tokens *head = NULL;
 
@@ -101,7 +102,7 @@ Test(check_tokens, expected_head_to_be_null_open_and_close_parenthesis_without_c
 	clear_tokens(&head);
 }
 
-Test(check_tokens, expected_head_to_be_null_because_alone_close_parenthesis) {
+Test(check_tokens, expected_head_to_be_null_because_alone_close_parenthesis, .init=cr_redirect_stderr) {
 	const char *line = ") cat";
 	struct s_tokens *head = NULL;
 
@@ -112,7 +113,7 @@ Test(check_tokens, expected_head_to_be_null_because_alone_close_parenthesis) {
 }
 
 
-Test(check_tokens, expected_head_to_be_null_because_unclosed_parenthesis) {
+Test(check_tokens, expected_head_to_be_null_because_unclosed_parenthesis, .init=cr_redirect_stderr) {
 	const char *line = "echo oi | ((cat -e)";
 	struct s_tokens *head = NULL;
 
@@ -122,7 +123,7 @@ Test(check_tokens, expected_head_to_be_null_because_unclosed_parenthesis) {
 	clear_tokens(&head);
 }
 
-Test(check_tokens, expected_head_to_be_null_because_parenthesis_after_pipe) {
+Test(check_tokens, expected_head_to_be_null_because_parenthesis_after_pipe, .init=cr_redirect_stderr) {
 	const char *line = "(echo oi | )";
 	struct s_tokens *head = NULL;
 

@@ -63,7 +63,7 @@ define FILES
 	wait.c
 	signals.c
 	exit.c
-
+	cd.c
 endef
 
 define	TEST_FILES
@@ -87,7 +87,7 @@ define	TEST_FILES
 	tests_check_path.c
 	tests_utils_exec.c
 	tests_gen_envp.c
-
+	tests_cd.c
 endef
 
 SRC = main.c\

@@ -235,3 +235,14 @@ Test(parsing, expected_result_right_4)
 	}
 	destroy_programs(&program);
 }
+
+Test(parsing, expected_result_right_5) {
+	struct s_tokens *tok = tokenizer("cd ../ ./");
+	struct s_program *prog = parsing(tok);
+
+	clear_tokens(&tok);
+	cr_assert_str_eq(prog->name, "cd");
+	cr_assert_str_eq(prog->params->content, "../");
+	cr_assert_str_eq(prog->params->next->content, "./");
+	destroy_programs(&prog);
+}
