@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/19 12:08:24 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/03/28 20:01:13 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/03/28 21:00:09 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +18,13 @@
 
 struct s_exec
 {
-	int	fdin;
-	int	fdout;
-	int	tmpin;
-	int	tmpout;
-	int	_pipe[2];
+	int					fdin;
+	int					fdout;
+	int					tmpin;
+	int					tmpout;
+	int					_pipe[2];
+	int					exit_status;
+	struct s_program	*first_prog;
 };
 
 enum e_builtin

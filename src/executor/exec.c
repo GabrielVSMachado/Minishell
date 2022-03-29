@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/17 12:52:00 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/03/28 20:01:56 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/03/28 21:00:46 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@
 #include "linked_list.h"
 #include "parsing.h"
 #include "tokenizer.h"
-#include <asm-generic/errno-base.h>
 #include <signal.h>
 #include <stddef.h>
 #include <stdio.h>
@@ -136,33 +135,28 @@ static int	setup_to_exec(struct s_program *programs, struct s_exec *executor)
 int	executor(struct s_program *programs)
 {
 	struct s_exec		exec;
-	struct s_program	*tmp;
-	int					exit_status;
 
 	setup_signal(SIGINT, handler_exec);
 	exec.tmpin = dup(STDIN_FILENO);
 	exec.tmpout = dup(STDOUT_FILENO);
 	if (NOT programs->infile)
 		exec.fdin = dup(exec.tmpin);
-	tmp = programs;
+	exec.first_prog = programs;
 	while (programs)
 	{
 		if (setup_to_exec(programs, &exec))
 			return (exit_errno(exec.tmpin, exec.tmpout));
-		if (programs->name)
+		if (programs->name && is_builtin(programs))
+			exec.exit_status = exec_builtin(programs, &exec.first_prog);
+		else if (programs->name)
 		{
-			if (is_builtin(programs))
-				exit_status = exec_builtin(programs, &tmp);
-			else
-			{
-				programs->pid = fork();
-				if (programs->pid == 0)
-					exec_child(programs, &tmp, &exec);
-			}
+			programs->pid = fork();
+			if (programs->pid == 0)
+				exec_child(programs, &exec.first_prog, &exec);
 		}
 		programs = programs->next;
 	}
 	reset_stdin_stdout(exec.tmpin, exec.tmpout);
-	exit_status = wait_all(tmp);
-	return (insert_hashtbl("?", ft_itoa(exit_status)), 0);
+	exec.exit_status = wait_all(exec.first_prog);
+	return (insert_hashtbl("?", ft_itoa(exec.exit_status)), 0);
 }
