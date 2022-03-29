@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/28 19:13:13 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/03/28 20:14:32 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/03/28 21:31:12 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ int	exec_builtin(struct s_program *current_prog, struct s_program **first_prog)
 	else if (current_prog->builtin_code == EXPORT)
 		exit_status = export(current_prog->params);
 	else if (current_prog->builtin_code == UNSET)
-		unset("key");
+		unset(current_prog->params);
 	else if (current_prog->builtin_code == ENV)
 		env();
 	else if (current_prog->builtin_code == EXIT

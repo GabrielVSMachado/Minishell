@@ -6,22 +6,27 @@
 /*   By: gvitor-s <gvitor-s>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/11 20:52:04 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/03/12 19:48:46 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/03/28 21:34:02 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "hashtable.h"
 #include "libft.h"
+#include "linked_list.h"
 
-void	unset(const char	*key)
+void	unset(struct s_list *params)
 {
 	struct s_keyval	*env;
 
-	env = remove_key(key);
-	if (NOT env)
-		return ;
-	free(env->key);
-	free(env->val);
-	free(env);
-	env = NULL;
+	while (params)
+	{
+		env = remove_key(params->content);
+		if (NOT env)
+			continue ;
+		free(env->key);
+		free(env->val);
+		free(env);
+		env = NULL;
+		params = params->next;
+	}
 }
