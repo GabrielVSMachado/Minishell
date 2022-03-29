@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/19 11:44:37 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/03/26 22:22:26 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/03/29 12:26:20 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ char	**gen_envp(void)
 	unsigned int	bucket;
 	unsigned int	counter;
 
-	envp = malloc(sizeof(char *) * (g_envs.size + 1));
+	envp = ft_calloc(sizeof(char *), (g_envs.size + 1));
 	bucket = 0;
 	counter = 0;
 	while (bucket < TBLSIZE)

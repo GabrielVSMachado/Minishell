@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/05 16:48:33 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/03/12 20:28:22 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/03/29 12:30:22 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,6 +90,7 @@ struct s_keyval	*remove_key(const char *key)
 		prev = element;
 		element = element->next;
 	}
+	g_envs.size -= 1;
 	if (NOT prev)
 	{
 		*bucket = element->next;
