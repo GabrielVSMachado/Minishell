@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/17 12:52:00 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/03/28 21:00:46 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/03/29 13:07:17 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,8 +52,9 @@ static int	treat_infile(struct s_list *infile, int r_pipe)
 {
 	int			fdin;
 	struct s_io	*tmp;
+	int			save_errno;
 
-	fdin = -1;
+	fdin = r_pipe;
 	while (infile)
 	{
 		tmp = (struct s_io *)infile->content;
@@ -61,17 +62,17 @@ static int	treat_infile(struct s_list *infile, int r_pipe)
 		{
 			if (r_pipe != -1)
 			{
-				close(r_pipe);
+				save_errno = errno;
+				(void)close(r_pipe);
+				errno = save_errno;
 				r_pipe = -1;
 			}
-			if (fdin != -1)
+			if (fdin != r_pipe)
 				close(fdin);
 			fdin = open(tmp->file, O_RDONLY | O_CLOEXEC);
 		}
 		infile = infile->next;
 	}
-	if (fdin == -1)
-		fdin = r_pipe;
 	return (fdin);
 }
 
@@ -107,8 +108,8 @@ static int	setup_to_exec(struct s_program *programs, struct s_exec *executor)
 {
 	if (programs->infile)
 		executor->fdin = treat_infile(programs->infile, programs->h_pipe[0]);
-	if (executor->fdin < 0)
-		return (exit_errno(executor->tmpin, executor->tmpout));
+	if (executor->fdin == -1)
+		return (perror("minishell: infile"), 1);
 	dup2(executor->fdin, STDIN_FILENO);
 	close(executor->fdin);
 	if (programs->next == NULL)
@@ -117,13 +118,13 @@ static int	setup_to_exec(struct s_program *programs, struct s_exec *executor)
 			executor->fdout = treat_outfile(programs->outfile);
 		else
 			executor->fdout = dup(executor->tmpout);
-		if (executor->fdout < 0)
-			return (exit_errno(executor->tmpin, executor->tmpout));
+		if (executor->fdout == -1)
+			return (perror("minishell: fdout"), 1);
 	}
 	else
 	{
 		if (pipe(executor->_pipe) == -1)
-			return (exit_errno(executor->tmpin, executor->tmpout));
+			return (perror("minishell: pipe"), 1);
 		executor->fdin = executor->_pipe[0];
 		executor->fdout = executor->_pipe[1];
 	}
