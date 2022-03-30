@@ -3,9 +3,11 @@
 #include <criterion/redirect.h>
 #include "../src/expand/envs.h"
 #include "hashtable.h"
+#include "linked_list.h"
 #include "minishell.h"
 #include "parsing.h"
 #include "tokenizer.h"
+#include <string.h>
 #include <unistd.h>
 #include <limits.h>
 
@@ -23,10 +25,12 @@ Test(cd, expected_STDERR_msg, .init=cr_redirect_stderr) {
 Test(cd, expected_STDERR_msg_no_home, .init=cr_redirect_stderr) {
 	struct s_tokens *tok;
 	struct s_program *prog;
+	struct s_list *params = NULL;
 
+	ft_lstadd_back(&params, ft_lstnew(strdup("HOME")));
 	init_hashtbl();
 	init_envs();
-	unset("HOME");
+	unset(params);
 	tok = tokenizer("cd");
 	prog = parsing(tok);
 	clear_tokens(&tok);
@@ -35,6 +39,7 @@ Test(cd, expected_STDERR_msg_no_home, .init=cr_redirect_stderr) {
 	cr_assert_stderr_eq_str("minishell: cd: HOME not set\n");
 	destroy_programs(&prog);
 	destroy_hashtbl();
+	ft_lstclear(&params, free);
 }
 
 Test(cd, expected_pwd_eq_cwd) {
