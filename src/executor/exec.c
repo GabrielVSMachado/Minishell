@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/17 12:52:00 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/03/30 14:36:40 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/03/30 16:49:43 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,25 +114,25 @@ static int	setup_to_exec(struct s_program *programs, struct s_exec *executor)
 		return (perror("minishell: infile"), 1);
 	dup2(executor->fdin, STDIN_FILENO);
 	close(executor->fdin);
-	if (programs->next == NULL)
-	{
-		if (programs->outfile)
-			executor->fdout = treat_outfile(programs->outfile);
-		else
-			executor->fdout = dup(executor->tmpout);
-		if (executor->fdout == -1)
-			return (perror("minishell: fdout"), 1);
-	}
+	if (programs->next == NULL && programs->outfile)
+		executor->fdout = treat_outfile(programs->outfile);
+	else if (programs->next == NULL)
+		executor->fdout = dup(executor->tmpout);
 	else
 	{
 		if (pipe(executor->_pipe) == -1)
 			return (perror("minishell: pipe"), 1);
 		executor->fdin = executor->_pipe[0];
 		executor->fdout = executor->_pipe[1];
+		if (programs->outfile)
+		{
+			close(executor->fdout);
+			executor->fdout = treat_outfile(programs->outfile);
+		}
 	}
-	dup2(executor->fdout, STDOUT_FILENO);
-	close(executor->fdout);
-	return (0);
+	if (executor->fdout == -1)
+		return (perror("minishell: fdout"), 1);
+	return (dup2(executor->fdout, STDOUT_FILENO), close(executor->fdout), 0);
 }
 
 int	executor(struct s_program *programs)
