@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/17 12:52:00 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/03/30 00:07:37 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/03/30 00:47:33 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,8 +81,8 @@ static void	exec_child(struct s_program *programs, struct s_program **fstp,
 		struct s_exec *exec)
 {
 	char				**envp;
-	char				*path;
 	char *const			*argv;
+	int					exit_code;
 
 	setup_signal(SIGQUIT, SIG_DFL);
 	setup_signal(SIGINT, SIG_DFL);
@@ -92,34 +92,18 @@ static void	exec_child(struct s_program *programs, struct s_program **fstp,
 	if (ft_strchr(programs->name, '/'))
 	{
 		if (isdir(programs->name))
-		{
 			msg_dir(programs->name);
-			clear_memory(fstp, (char **)argv, &envp, NULL);
-			destroy_hashtbl();
-			exit(126);
+		else
+		{
+			execve(programs->name, argv, envp);
+			msg_error_on_exec(programs->name);
 		}
-		execve(programs->name, argv, envp);
-		msg_error_on_exec(programs->name);
-		clear_memory(fstp, (char **)argv, &envp, NULL);
-		destroy_hashtbl();
-		exit(126);
+		exit_code = 126;
 	}
 	else
-	{
-		path = check_path(programs->name);
-		if (path)
-		{
-			execve(path, argv, envp);
-			msg_error_on_exec(programs->name);
-			clear_memory(fstp, (char **)argv, &envp, path);
-			destroy_hashtbl();
-			exit(126);
-		}
-		print_msg_command_not_found(programs->name);
-		clear_memory(fstp, (char **)argv, &envp, path);
-		destroy_hashtbl();
-		exit(127);
-	}
+		exit_code = exec_from_path(programs->name, argv, envp);
+	return (clear_memory(fstp, (char **)argv, &envp), destroy_hashtbl(),
+		exit(exit_code));
 }
 
 static int	setup_to_exec(struct s_program *programs, struct s_exec *executor)

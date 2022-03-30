@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/19 12:08:24 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/03/30 00:04:03 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/03/30 00:45:24 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,7 @@ enum e_builtin
 };
 
 void		msg_error_on_exec(char *prog_name);
-void		clear_memory(struct s_program **fstp, char **argv, char ***envp,
-				char *path);
+void		clear_memory(struct s_program **fstp, char **argv, char ***envp);
 void		clear_fds_on_child(struct s_program *fstp, struct s_exec *exec);
 void		msg_dir(char *program_name);
 int			isdir(char *program_name);
@@ -55,4 +54,5 @@ char *const	*gen_argv(t_list *params, char *name);
 char		**gen_envp(void);
 void		delete_envp(char **envp);
 char		*check_path(char const *program_name);
+int			exec_from_path(char *program_name, char *const *argv, char **envp);
 #endif
