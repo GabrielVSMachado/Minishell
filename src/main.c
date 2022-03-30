@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/23 20:41:00 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/03/27 19:51:49 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/03/30 14:36:54 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ int	main(void)
 		free(line);
 		programs = parsing(tokens);
 		clear_tokens(&tokens);
-		if (exec_heredocs(programs) != -1)
+		if (programs && exec_heredocs(programs) != -1)
 			executor(programs);
 		destroy_programs(&programs);
 	}
