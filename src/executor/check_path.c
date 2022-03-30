@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/17 12:52:28 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/03/27 13:36:13 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/03/29 22:29:05 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ char	*check_path(char const *program_name)
 		tmp = ft_strjoin(all_paths[position], "/");
 		program_path = ft_strjoin(tmp, program_name);
 		free(tmp);
-		if (access(program_path, F_OK | X_OK) == 0)
+		if (access(program_path, F_OK) == 0)
 			break ;
 		free(program_path);
 		program_path = NULL;

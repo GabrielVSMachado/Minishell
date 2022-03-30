@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/17 12:52:00 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/03/29 13:07:17 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/03/30 00:07:37 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <sys/types.h>
 #include <unistd.h>
 #include <fcntl.h>
@@ -76,7 +77,7 @@ static int	treat_infile(struct s_list *infile, int r_pipe)
 	return (fdin);
 }
 
-static void	exec_child(struct s_program *programs, struct s_program **first_p,
+static void	exec_child(struct s_program *programs, struct s_program **fstp,
 		struct s_exec *exec)
 {
 	char				**envp;
@@ -85,23 +86,40 @@ static void	exec_child(struct s_program *programs, struct s_program **first_p,
 
 	setup_signal(SIGQUIT, SIG_DFL);
 	setup_signal(SIGINT, SIG_DFL);
-	path = check_path(programs->name);
+	clear_fds_on_child(*fstp, exec);
 	argv = gen_argv(programs->params, programs->name);
 	envp = gen_envp();
-	clear_fds_on_programs(*first_p);
-	close(exec->tmpin);
-	close(exec->tmpout);
-	close(exec->fdin);
-	if (path)
-		execve(path, argv, envp);
+	if (ft_strchr(programs->name, '/'))
+	{
+		if (isdir(programs->name))
+		{
+			msg_dir(programs->name);
+			clear_memory(fstp, (char **)argv, &envp, NULL);
+			destroy_hashtbl();
+			exit(126);
+		}
+		execve(programs->name, argv, envp);
+		msg_error_on_exec(programs->name);
+		clear_memory(fstp, (char **)argv, &envp, NULL);
+		destroy_hashtbl();
+		exit(126);
+	}
 	else
+	{
+		path = check_path(programs->name);
+		if (path)
+		{
+			execve(path, argv, envp);
+			msg_error_on_exec(programs->name);
+			clear_memory(fstp, (char **)argv, &envp, path);
+			destroy_hashtbl();
+			exit(126);
+		}
 		print_msg_command_not_found(programs->name);
-	free(path);
-	free((void *)argv);
-	delete_envp(envp);
-	destroy_programs(first_p);
-	destroy_hashtbl();
-	exit(127);
+		clear_memory(fstp, (char **)argv, &envp, path);
+		destroy_hashtbl();
+		exit(127);
+	}
 }
 
 static int	setup_to_exec(struct s_program *programs, struct s_exec *executor)

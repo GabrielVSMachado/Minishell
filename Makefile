@@ -67,6 +67,8 @@ define FILES
 	echo.c
 	builtin.c
 	pwd.c
+	check_dir.c
+	utils_child.c
 endef
 
 define	TEST_FILES
