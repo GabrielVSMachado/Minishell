@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/17 12:52:00 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/03/30 00:47:33 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/03/30 12:55:44 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,22 +144,23 @@ int	executor(struct s_program *programs)
 	exec.tmpout = dup(STDOUT_FILENO);
 	if (NOT programs->infile)
 		exec.fdin = dup(exec.tmpin);
-	exec.first_prog = programs;
+	exec.fstprg = programs;
 	while (programs)
 	{
 		if (setup_to_exec(programs, &exec))
 			return (exit_errno(exec.tmpin, exec.tmpout));
 		if (programs->name && is_builtin(programs))
-			exec.exit_status = exec_builtin(programs, &exec.first_prog);
+			programs->exit_code = exec_builtin(programs, &exec.fstprg);
 		else if (programs->name)
 		{
 			programs->pid = fork();
 			if (programs->pid == 0)
-				exec_child(programs, &exec.first_prog, &exec);
+				exec_child(programs, &exec.fstprg, &exec);
 		}
 		programs = programs->next;
 	}
 	reset_stdin_stdout(exec.tmpin, exec.tmpout);
-	exec.exit_status = wait_all(exec.first_prog);
-	return (insert_hashtbl("?", ft_itoa(exec.exit_status)), 0);
+	wait_all(exec.fstprg);
+	return (insert_hashtbl("?",
+			ft_itoa(last_program(exec.fstprg)->exit_code)), 0);
 }

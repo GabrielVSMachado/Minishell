@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/29 21:32:38 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/03/30 00:45:15 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/03/30 13:12:52 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,5 +50,5 @@ int	exec_from_path(char *program_name, char *const *argv, char **envp)
 	}
 	else
 		print_msg_command_not_found(program_name);
-	return (free(path), 126 + path == NULL);
+	return (126 + (path == NULL));
 }

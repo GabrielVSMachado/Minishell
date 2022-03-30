@@ -6,26 +6,36 @@
 /*   By: gvitor-s <gvitor-s>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/23 13:27:54 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/03/24 21:17:07 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/03/30 13:37:56 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "executor/utils_exec.h"
+#include "libft.h"
 #include "parsing.h"
 #include <stdlib.h>
 #include <sys/wait.h>
 #include <unistd.h>
 
-int	wait_all(struct s_program *program)
+void	wait_all(struct s_program *program)
 {
-	int	exit_status;
+	struct s_program	*llst;
+	int					issignaled;
 
-	exit_status = 0;
+	llst = program;
 	while (program)
 	{
-		waitpid(program->pid, &exit_status, 0);
+		waitpid(program->pid, &program->exit_code, 0);
 		program = program->next;
 	}
-	if (WIFSIGNALED(exit_status))
-		return (WTERMSIG(exit_status) + 128);
-	return (WEXITSTATUS(exit_status));
+	while (llst)
+	{
+		if (llst->builtin_code == -1)
+		{
+			issignaled = WIFSIGNALED(llst->exit_code);
+			llst->exit_code = (issignaled * (WTERMSIG(llst->exit_code) + 128)
+					+ (NOT issignaled) * WEXITSTATUS(llst->exit_code));
+		}
+		llst = llst->next;
+	}
 }
