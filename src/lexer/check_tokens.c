@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/17 23:26:01 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/03/13 14:23:08 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/03/31 17:36:27 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,11 +59,17 @@ struct s_tokens	*check_tokens(struct s_tokens **head)
 	while (tmp)
 	{
 		if (is_redirection(tmp->token) AND NOT is_valid_word(tmp->next))
+		{
 			raise_tokenizer_err("Invalid character after redirection", head);
+			break ;
+		}
 		else if (tmp->token == T_PIPE AND tmp->next AND NOT (
 				is_redirection(tmp->next->token) OR is_valid_word(tmp->next)
 				OR tmp->next->token == T_OPARENTHESIS))
+		{
 			raise_tokenizer_err("Invalid character after T_PIPE", head);
+			break ;
+		}
 		tmp = tmp->next;
 	}
 	return (*head);
