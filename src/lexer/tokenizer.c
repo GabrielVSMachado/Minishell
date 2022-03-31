@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/09 22:28:40 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/03/28 14:42:32 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/03/31 16:53:31 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,5 +96,5 @@ struct s_tokens	*tokenizer(char const *line)
 		}
 		cursor += 1;
 	}
-	return (head);
+	return (check_tokens(&head));
 }

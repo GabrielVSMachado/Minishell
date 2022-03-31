@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/08 22:03:53 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/02/08 22:03:53 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/03/31 15:56:29 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ enum	e_tokens
 	T_PIPE,
 };
 
+int				append_command(char **line);
 struct s_tokens	*find_token(struct s_tokens *head, unsigned int token);
 void			add_back_token(struct s_tokens **head, struct s_tokens *new);
 void			clear_tokens(struct s_tokens **head);

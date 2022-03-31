@@ -69,6 +69,7 @@ define FILES
 	pwd.c
 	check_dir.c
 	utils_child.c
+	utils_lexer.c
 endef
 
 define	TEST_FILES

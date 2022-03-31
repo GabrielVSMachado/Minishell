@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/24 13:54:22 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/03/27 13:21:52 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/03/31 15:55:55 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,12 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <readline/readline.h>
+
+void	handler_append_command(int sig)
+{
+	insert_hashtbl("?", ft_itoa(sig + 128));
+	write(STDOUT_FILENO, "\n", 1);
+}
 
 void	handler_heredoc(int sig, void *programs)
 {
