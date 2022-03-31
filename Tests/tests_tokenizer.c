@@ -1,5 +1,91 @@
 #include <criterion/criterion.h>
-#include "tokenizer.h"
+#include "libft.h"
+#include "error.h"
+#include <stdio.h>
+
+static int	is_special(char	const c)
+{
+	return (ft_strchr("|&()><", c) != NULL);
+}
+
+static int	is_space(char const c)
+{
+	return (c == ' ');
+}
+
+static void	which_other_tokens(struct s_tokens **head, char const *line,
+		unsigned int *cursor)
+{
+	add_back_token(head, new_token(
+			NULL,
+			T_PIPE * (line[*cursor] == '|' && line[*cursor + 1] != '|')
+			+ T_OR * (line[*cursor] == '|' && line[*cursor + 1] == '|')
+			+ T_CPARENTHESIS * (line[*cursor] == ')')
+			+ T_OPARENTHESIS * (line[*cursor] == '(')
+			+ T_AND * (line[*cursor] == '&' && line[*cursor + 1] == '&')
+			+ T_RAOUTPUT * (line[*cursor] == '>' && line[*cursor + 1] == '>')
+			+ T_RINPUT * (line[*cursor] == '<' && line[*cursor + 1] != '<')
+			+ T_ROUTPUT * (line[*cursor] == '>' && line[*cursor + 1] != '>')
+			+ T_HEREDOC * (line[*cursor] == '<' && line[*cursor + 1] == '<')
+			));
+	(*cursor) += (1 + (line[*cursor] == line[*cursor + 1]
+				AND (line[*cursor] != '(' AND line[*cursor] != ')')));
+}
+
+static int	treat_words(struct s_tokens **head, char const *line,
+		unsigned int *cursor)
+{
+	unsigned int	counter;
+	unsigned char	c;
+	char			*next_quotes;
+
+	counter = *cursor;
+	while (line[counter] != '\0'
+		&& NOT is_space(line[counter])
+		&& NOT is_special(line[counter]))
+	{
+		c = ('\'' * (line[counter] == '\''))
+			+ ('\"' * (line[counter] == '\"'));
+		if (c != 0)
+		{	
+			next_quotes = ft_strchr(line + counter + 1, c);
+			if (next_quotes == NULL)
+				return (raise_tokenizer_err(
+						"bad format string: unclosed quotes", head));
+			counter += (next_quotes - (line + counter));
+		}
+		counter += 1;
+	}
+	add_back_token(head,
+		new_token(ft_substr(line, *cursor, counter - *cursor), T_WORD));
+	(*cursor) += (counter - *cursor);
+	return (0);
+}
+
+struct s_tokens	*_tokenizer(char const *line)
+{
+	struct s_tokens	*head;
+	unsigned int	cursor;
+
+	head = NULL;
+	cursor = 0;
+	while (line[cursor] != '\0')
+	{
+		if (is_special(line[cursor]))
+		{
+			which_other_tokens(&head, line, &cursor);
+			continue ;
+		}
+		else if (NOT is_space(line[cursor]))
+		{
+			if (treat_words(&head, line, &cursor) == -1)
+				return (clear_tokens(&head), NULL);
+			continue ;
+		}
+		cursor += 1;
+	}
+	return (head);
+}
 
 
 Test(tokenizer, expected_llist_with_two_words) {
@@ -7,7 +93,7 @@ Test(tokenizer, expected_llist_with_two_words) {
 	struct s_tokens	*head = NULL;
 
 	line = strdup("cat Makefile");
-	head = tokenizer(line);
+	head = _tokenizer(line);
 	cr_assert_str_eq(
 			head->value, "cat",
 			"head->value on first test: %s\n", head->value);
@@ -27,7 +113,7 @@ Test(tokenizer, expected_llist_with_fours_words_and_one_rinput) {
 	char const	line[] = "tr '\n' ' ' < command.txt";
 	struct s_tokens	*head = NULL;
 
-	head = tokenizer(line);
+	head = _tokenizer(line);
 	cr_assert_str_eq(head->value, "tr",
 			"head->value on second test: %s\n", head->value);
 	cr_assert(head->token == T_WORD,
@@ -72,7 +158,7 @@ Test(tokenizer, expected_llist_with_three_words_and_one_routput) {
 	char const	*line = "cat Makefile > makefile.txt";
 	struct s_tokens	*head = NULL;
 
-	head = tokenizer(line);
+	head = _tokenizer(line);
 
 	cr_assert_str_eq(head->value, "cat",
 			"head->value on third test: %s\n", head->value);
@@ -104,7 +190,7 @@ Test(tokenizer, expected_llist_with_fours_words_and_one_rinput_complex) {
 	char const	*line = "tr 'banana pera' 'manga abacaxi' < frutas.csv";
 	struct s_tokens	*head = NULL;
 
-	head = tokenizer(line);
+	head = _tokenizer(line);
 
 	cr_assert_str_eq(head->value, "tr",
 			"head->value on fourth test: %s\n", head->value);
@@ -141,7 +227,7 @@ Test(tokenizer, expected_llist_with_four_words_and_one_pipe_with_one_token_inval
 	char const	*line = "valgrind ./test |& cat -e";
 	struct s_tokens	*head = NULL;
 
-	head = tokenizer(line);
+	head = _tokenizer(line);
 
 	cr_assert_str_eq(head->value, "valgrind",
 			"head->value on fifth %s\n", head->value);
@@ -184,7 +270,7 @@ Test(tokenizer, expected_llist_with_heredoc_and_four_words) {
 	char const	*line = "<< out tr 'a' 'b'";
 	struct s_tokens	*head = NULL;
 
-	head = tokenizer(line);
+	head = _tokenizer(line);
 
 	cr_assert_null(head->value, "head->value on sixth is not NULL");
 	cr_assert(head->token == T_HEREDOC, "head->token on sixth %d\n", head->token);
@@ -240,7 +326,7 @@ Test(tokenizer, expected_llist_with_six_words_and_AND_and_OR) {
 		"echo",
 		"$?"
 	};
-	head = tokenizer(line);
+	head = _tokenizer(line);
 	int i = 0;
 	for (struct s_tokens *tmp = head; tmp != NULL; tmp = tmp->next) {
 		if (values[i] == NULL) {
@@ -270,7 +356,7 @@ Test(tokenizer, expected_llist_with_rinput_routput_and_three_words) {
 		T_WORD
 	};
 
-	head = tokenizer(line);
+	head = _tokenizer(line);
 	int	i = 0;
 	for (struct s_tokens *tmp = head; tmp; tmp = tmp->next) {
 		if (!expected_values[i]) {
@@ -302,7 +388,7 @@ Test(tokenizer, expected_four_words_and_one_pipe) {
 		T_WORD,
 		T_WORD
 	};
-	head = tokenizer(line);
+	head = _tokenizer(line);
 	int i = 0;
 	for (struct s_tokens *tmp = head; tmp; tmp = tmp->next) {
 		if (!expected_values[i]) {
@@ -328,7 +414,7 @@ Test(tokenizer, expected_llist_with_three_words) {
 		T_WORD,
 		T_WORD
 	};
-	head = tokenizer(line);
+	head = _tokenizer(line);
 	int i = 0;
 	for (struct s_tokens *tmp = head; tmp; tmp = tmp->next) {
 		cr_assert_str_eq(tmp->value, expected_values[i]);
@@ -358,7 +444,7 @@ Test(tokenizer, expected_llist_with_five_words_one_pipe_and_one_rout) {
 		T_WORD,
 		T_WORD
 	};
-	head = tokenizer(line);
+	head = _tokenizer(line);
 	int i = 0;
 	for (struct s_tokens *tmp = head; tmp; tmp = tmp->next) {
 		if (!expected_values[i]) {
@@ -386,7 +472,7 @@ Test(tokenizer, expected_RAOUTPUT) {
 		T_RAOUTPUT,
 		T_WORD
 	};
-	head = tokenizer(line);
+	head = _tokenizer(line);
 	int i = 0;
 	for (struct s_tokens *tmp = head; tmp; tmp = tmp->next) {
 		if (!expected_values[i]) {
@@ -401,7 +487,7 @@ Test(tokenizer, expected_RAOUTPUT) {
 
 Test(tokenizer, check_two_parenthesis_sequence) {
 	const char *line = "echo oi | ((cat -e)";
-	struct s_tokens *head = tokenizer(line);
+	struct s_tokens *head = _tokenizer(line);
 	const char *expected_values[] = {
 		"echo",
 		"oi",
@@ -459,7 +545,7 @@ Test(tokenizer, expected_llist_with_four_words_four_parenthesis_and_one_pipe) {
 		T_CPARENTHESIS,
 		T_CPARENTHESIS
 	};
-	head = tokenizer(line);
+	head = _tokenizer(line);
 	int i = 0;
 	for (struct s_tokens *tmp = head; tmp; tmp=tmp->next) {
 		if (!expected_values[i]) {
