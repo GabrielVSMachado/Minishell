@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/17 12:52:28 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/03/29 22:29:05 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/04/01 17:20:00 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ char	*check_path(char const *program_name)
 	struct s_keyval	*path_env;
 
 	path_env = hashtbl_lookup("PATH");
-	if (NOT path_env || NOT program_name)
+	if (NOT path_env || NOT program_name || NOT (*program_name))
 		return (NULL);
 	all_paths = ft_split(path_env->val, ':');
 	position = -1;
