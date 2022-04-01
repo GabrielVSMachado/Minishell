@@ -1,11 +1,13 @@
 #include <criterion/criterion.h>
 #include "libft.h"
 #include "error.h"
+#include "tokenizer.h"
+#include <criterion/internal/assert.h>
 #include <stdio.h>
 
 static int	is_special(char	const c)
 {
-	return (ft_strchr("|&()><", c) != NULL);
+	return (ft_strchr("|<>", c) != NULL);
 }
 
 static int	is_space(char const c)
@@ -18,18 +20,14 @@ static void	which_other_tokens(struct s_tokens **head, char const *line,
 {
 	add_back_token(head, new_token(
 			NULL,
-			T_PIPE * (line[*cursor] == '|' && line[*cursor + 1] != '|')
-			+ T_OR * (line[*cursor] == '|' && line[*cursor + 1] == '|')
-			+ T_CPARENTHESIS * (line[*cursor] == ')')
-			+ T_OPARENTHESIS * (line[*cursor] == '(')
-			+ T_AND * (line[*cursor] == '&' && line[*cursor + 1] == '&')
+			T_PIPE * (line[*cursor] == '|')
 			+ T_RAOUTPUT * (line[*cursor] == '>' && line[*cursor + 1] == '>')
 			+ T_RINPUT * (line[*cursor] == '<' && line[*cursor + 1] != '<')
 			+ T_ROUTPUT * (line[*cursor] == '>' && line[*cursor + 1] != '>')
 			+ T_HEREDOC * (line[*cursor] == '<' && line[*cursor + 1] == '<')
 			));
-	(*cursor) += (1 + (line[*cursor] == line[*cursor + 1]
-				AND (line[*cursor] != '(' AND line[*cursor] != ')')));
+	(*cursor) += (1 + ((line[*cursor] == '>' || line[*cursor] == '<')
+				AND (line[*cursor] == line[*cursor + 1])));
 }
 
 static int	treat_words(struct s_tokens **head, char const *line,
@@ -226,43 +224,35 @@ Test(tokenizer, expected_llist_with_fours_words_and_one_rinput_complex) {
 Test(tokenizer, expected_llist_with_four_words_and_one_pipe_with_one_token_invalid) {
 	char const	*line = "valgrind ./test |& cat -e";
 	struct s_tokens	*head = NULL;
+	char 	*const	expected_values[] = {
+		"valgrind",
+		"./test",
+		NULL,
+		"&",
+		"cat",
+		"-e"
+	};
+	unsigned int const	expected_tokens[] = {
+		T_WORD,
+		T_WORD,
+		T_PIPE,
+		T_WORD,
+		T_WORD,
+		T_WORD,
+		T_WORD
+	};
 
 	head = _tokenizer(line);
+	int	i = 0;
+	for (struct s_tokens *tmp = head; tmp; tmp = tmp->next) {
+		if (!expected_values[i]) {
+			cr_assert_null(tmp->value);
+		}else {
+			cr_assert_str_eq(tmp->value, expected_values[i]);
+		}
+		cr_assert_eq(tmp->token, expected_tokens[i++]);
+	}
 
-	cr_assert_str_eq(head->value, "valgrind",
-			"head->value on fifth %s\n", head->value);
-	cr_assert(head->token == T_WORD,
-			"head->token on fifth %d\n", head->token);
-
-	cr_assert_str_eq(head->next->value, "./test",
-			"head->next->value on fifth %s\n", head->next->value);
-	cr_assert(head->next->token == T_WORD,
-			"head->next->token on fifth %d\n", head->next->token);
-
-	cr_assert_null(head->next->next->value,
-			"head->next->next->value is not NULL");
-	cr_assert(head->next->next->token == T_PIPE,
-			"head->next->next->token on fifth %d\n", T_PIPE);
-
-	cr_assert_null(head->next->next->next->value,
-			"head->next->next->next->value is not null"); //invalid token
-	cr_assert(head->next->next->next->token == T_WORD,
-			"head->next->next->next->token on fifth %d\n",
-			head->next->next->next->token);
-
-	cr_assert_str_eq(head->next->next->next->next->value, "cat",
-			"head->next->next->next->next->value on fifth %s\n",
-			head->next->next->next->next->value);
-	cr_assert(head->next->next->next->next->token == T_WORD,
-			"head->next->next->next->next->token on fifth %d\n",
-			head->next->next->next->next->token);
-
-	cr_assert_str_eq(head->next->next->next->next->next->value, "-e",
-			"head->next->next->next->next->next->value on fifth %s\n",
-			head->next->next->next->next->next->value);
-	cr_assert(head->next->next->next->next->next->token == T_WORD,
-			"head->next->next->next->next->next->token on fifth %d\n",
-			head->next->next->next->next->next->token);
 	clear_tokens(&head);
 }
 
@@ -306,22 +296,24 @@ Test(tokenizer, expected_llist_with_six_words_and_AND_and_OR) {
 	struct s_tokens	*head = NULL;
 	unsigned int	tokens[] = {
 		T_WORD,
-		T_AND,
 		T_WORD,
 		T_WORD,
-		T_AND,
 		T_WORD,
-		T_OR,
+		T_WORD,
+		T_WORD,
+		T_PIPE,
+		T_PIPE,
 		T_WORD,
 		T_WORD
 	};
 	char *values[] = {
 		"true",
-		NULL,
+		"&&",
 		"echo",
 		"$?",
-		NULL,
+		"&&",
 		"false",
+		NULL,
 		NULL,
 		"echo",
 		"$?"
@@ -492,21 +484,15 @@ Test(tokenizer, check_two_parenthesis_sequence) {
 		"echo",
 		"oi",
 		NULL,
-		NULL,
-		NULL,
-		"cat",
-		"-e",
-		NULL
+		"((cat",
+		"-e)",
 	};
 	const unsigned int expected_tokens[] = {
 		T_WORD,
 		T_WORD,
 		T_PIPE,
-		T_OPARENTHESIS,
-		T_OPARENTHESIS,
 		T_WORD,
 		T_WORD,
-		T_CPARENTHESIS
 	};
 	int i = 0;
 	for (struct s_tokens *tmp = head; tmp; tmp=tmp->next) {
@@ -524,26 +510,18 @@ Test(tokenizer, expected_llist_with_four_words_four_parenthesis_and_one_pipe) {
 	const char *line = "(echo oi | (cat -e))";
 	struct s_tokens *head = NULL;
 	const char *expected_values[] = {
-		NULL,
-		"echo",
+		"(echo",
 		"oi",
 		NULL,
-		NULL,
-		"cat",
-		"-e",
-		NULL,
-		NULL
+		"(cat",
+		"-e))",
 	};
 	const unsigned int expected_tokens[] = {
-		T_OPARENTHESIS,
 		T_WORD,
 		T_WORD,
 		T_PIPE,
-		T_OPARENTHESIS,
 		T_WORD,
 		T_WORD,
-		T_CPARENTHESIS,
-		T_CPARENTHESIS
 	};
 	head = _tokenizer(line);
 	int i = 0;

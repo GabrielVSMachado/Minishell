@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/09 22:28:40 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/03/31 16:53:31 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/03/31 22:35:40 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 
 static int	is_special(char	const c)
 {
-	return (ft_strchr("|&()><", c) != NULL);
+	return (ft_strchr("|<>", c) != NULL);
 }
 
 static int	is_space(char const c)
@@ -30,18 +30,14 @@ static void	which_other_tokens(struct s_tokens **head, char const *line,
 {
 	add_back_token(head, new_token(
 			NULL,
-			T_PIPE * (line[*cursor] == '|' && line[*cursor + 1] != '|')
-			+ T_OR * (line[*cursor] == '|' && line[*cursor + 1] == '|')
-			+ T_CPARENTHESIS * (line[*cursor] == ')')
-			+ T_OPARENTHESIS * (line[*cursor] == '(')
-			+ T_AND * (line[*cursor] == '&' && line[*cursor + 1] == '&')
+			T_PIPE * (line[*cursor] == '|')
 			+ T_RAOUTPUT * (line[*cursor] == '>' && line[*cursor + 1] == '>')
 			+ T_RINPUT * (line[*cursor] == '<' && line[*cursor + 1] != '<')
 			+ T_ROUTPUT * (line[*cursor] == '>' && line[*cursor + 1] != '>')
 			+ T_HEREDOC * (line[*cursor] == '<' && line[*cursor + 1] == '<')
 			));
-	(*cursor) += (1 + (line[*cursor] == line[*cursor + 1]
-				AND (line[*cursor] != '(' AND line[*cursor] != ')')));
+	(*cursor) += (1 + ((line[*cursor] == '>' || line[*cursor] == '<')
+				AND (line[*cursor] == line[*cursor + 1])));
 }
 
 static int	treat_words(struct s_tokens **head, char const *line,

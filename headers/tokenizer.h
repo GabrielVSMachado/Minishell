@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/08 22:03:53 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/03/31 15:56:29 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/03/31 22:34:13 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,10 +31,6 @@ enum	e_tokens
 	T_ROUTPUT,
 	T_RAOUTPUT,
 	T_HEREDOC,
-	T_OPARENTHESIS,
-	T_CPARENTHESIS,
-	T_AND,
-	T_OR,
 	T_PIPE,
 };
 
