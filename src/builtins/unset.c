@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/11 20:52:04 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/03/28 21:34:02 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/04/01 14:50:13 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,10 @@ void	unset(struct s_list *params)
 	{
 		env = remove_key(params->content);
 		if (NOT env)
+		{
+			params = params->next;
 			continue ;
+		}
 		free(env->key);
 		free(env->val);
 		free(env);
