@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/23 13:27:54 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/03/30 13:37:56 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/04/01 15:44:20 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,8 @@ void	wait_all(struct s_program *program)
 	llst = program;
 	while (program)
 	{
-		waitpid(program->pid, &program->exit_code, 0);
+		if (program->builtin_code == -1)
+			waitpid(program->pid, &program->exit_code, 0);
 		program = program->next;
 	}
 	while (llst)
