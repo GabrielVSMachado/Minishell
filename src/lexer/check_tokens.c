@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/17 23:26:01 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/03/31 17:36:27 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/03/31 21:44:27 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,7 @@ static int	validate_parenthesis(struct s_tokens *head)
 	counter = 0;
 	while (tmp)
 	{
-		if (counter < 0
-			|| (tmp->token == T_OPARENTHESIS
+		if (counter < 0 || (tmp->token == T_OPARENTHESIS
 				AND tmp->next->token == T_CPARENTHESIS))
 			return (0);
 		counter += (
@@ -56,18 +55,21 @@ struct s_tokens	*check_tokens(struct s_tokens **head)
 	tmp = *head;
 	if (NOT validate_parenthesis(tmp))
 		raise_tokenizer_err("Parenthesis error", head);
+	if (tmp->token == T_PIPE AND tmp->next == NULL)
+		raise_tokenizer_err("Invalid character near `|'", head);
 	while (tmp)
 	{
 		if (is_redirection(tmp->token) AND NOT is_valid_word(tmp->next))
 		{
-			raise_tokenizer_err("Invalid character after redirection", head);
+			raise_tokenizer_err("Invalid character near redirection", head);
 			break ;
 		}
-		else if (tmp->token == T_PIPE AND tmp->next AND NOT (
-				is_redirection(tmp->next->token) OR is_valid_word(tmp->next)
-				OR tmp->next->token == T_OPARENTHESIS))
+		else if (tmp->token == T_PIPE AND tmp->next
+			AND (!(is_redirection(tmp->next->token) OR is_valid_word(tmp->next)
+					OR tmp->next->token == T_OPARENTHESIS)
+				OR tmp->next->token == T_PIPE))
 		{
-			raise_tokenizer_err("Invalid character after T_PIPE", head);
+			raise_tokenizer_err("Invalid character near `|'", head);
 			break ;
 		}
 		tmp = tmp->next;

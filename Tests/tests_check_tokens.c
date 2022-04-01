@@ -1,4 +1,6 @@
 #include <criterion/criterion.h>
+#include <criterion/assert.h>
+#include <criterion/redirect.h>
 #include <criterion/redirect.h>
 #include "tokenizer.h"
 
@@ -7,7 +9,6 @@ Test(check_tokens, expected_head_to_be_null, .init=cr_redirect_stderr) {
 	struct s_tokens *head = NULL;
 
 	head = tokenizer(line);
-	head = check_tokens(&head);
 	cr_assert_null(head);
 	clear_tokens(&head);
 }
@@ -17,7 +18,6 @@ Test(check_tokens, expected_head_to_be_null_because_of_amper_after_pipe, .init=c
 	struct s_tokens *head = NULL;
 
 	head = tokenizer(line);
-	head = check_tokens(&head);
 	cr_assert_null(head);
 	clear_tokens(&head);
 }
@@ -27,7 +27,6 @@ Test(check_tokens, expected_head_to_be_null_because_after_heredoc_needed_word, .
 	struct s_tokens *head = NULL;
 
 	head = tokenizer(line);
-	head = check_tokens(&head);
 	cr_assert_null(head);
 	clear_tokens(&head);
 }
@@ -37,7 +36,6 @@ Test(check_tokens, expected_head_to_be_null_because_after_rinput_need_word, .ini
 	struct s_tokens	*head = NULL;
 
 	head = tokenizer(line);
-	head = check_tokens(&head);
 	cr_assert_null(head);
 	clear_tokens(&head);
 }
@@ -47,7 +45,6 @@ Test(check_tokens, expected_head_to_be_null_because_after_raoutput_need_word, .i
 	struct s_tokens *head = NULL;
 
 	head = tokenizer(line);
-	head = check_tokens(&head);
 	cr_assert_null(head);
 	clear_tokens(&head);
 }
@@ -57,7 +54,6 @@ Test(check_tokens, expected_head_to_be_not_null_with_valid_command) {
 	struct s_tokens *head = NULL;
 
 	head = tokenizer(line);
-	head = check_tokens(&head);
 	cr_assert_not_null(head);
 	clear_tokens(&head);
 }
@@ -67,7 +63,6 @@ Test(check_tokens, expected_head_to_be_not_null_with_valid_command_2) {
 	struct s_tokens *head = NULL;
 
 	head = tokenizer(line);
-	head = check_tokens(&head);
 	cr_assert_not_null(head);
 	clear_tokens(&head);
 }
@@ -77,7 +72,6 @@ Test(check_tokens, expected_head_to_be_not_null_with_valid_command_3) {
 	struct s_tokens *head = NULL;
 
 	head = tokenizer(line);
-	head = check_tokens(&head);
 	cr_assert_not_null(head);
 	clear_tokens(&head);
 }
@@ -87,7 +81,6 @@ Test(check_tokens, expected_head_to_be_not_null_with_valid_command_4) {
 	struct s_tokens *head = NULL;
 
 	head = tokenizer(line);
-	head = check_tokens(&head);
 	cr_assert_not_null(head);
 	clear_tokens(&head);
 }
@@ -97,7 +90,6 @@ Test(check_tokens, expected_head_to_be_null_open_and_close_parenthesis_without_c
 	struct s_tokens *head = NULL;
 
 	head = tokenizer(line);
-	head = check_tokens(&head);
 	cr_assert_null(head);
 	clear_tokens(&head);
 }
@@ -107,7 +99,6 @@ Test(check_tokens, expected_head_to_be_null_because_alone_close_parenthesis, .in
 	struct s_tokens *head = NULL;
 
 	head = tokenizer(line);
-	head = check_tokens(&head);
 	cr_assert_null(head);
 	clear_tokens(&head);
 }
@@ -118,7 +109,6 @@ Test(check_tokens, expected_head_to_be_null_because_unclosed_parenthesis, .init=
 	struct s_tokens *head = NULL;
 
 	head = tokenizer(line);
-	head = check_tokens(&head);
 	cr_assert_null(head);
 	clear_tokens(&head);
 }
@@ -128,7 +118,6 @@ Test(check_tokens, expected_head_to_be_null_because_parenthesis_after_pipe, .ini
 	struct s_tokens *head = NULL;
 
 	head = tokenizer(line);
-	head = check_tokens(&head);
 	cr_assert_null(head);
 	clear_tokens(&head);
 }
@@ -138,7 +127,6 @@ Test(check_tokens, expected_head_to_be_not_null_with_valid_command_5) {
 	struct s_tokens *head = NULL;
 
 	head = tokenizer(line);
-	head = check_tokens(&head);
 	cr_assert_not_null(head);
 	clear_tokens(&head);
 }
@@ -148,7 +136,6 @@ Test(check_tokens, expected_head_to_be_not_null_with_valid_command_6) {
 	struct s_tokens *head = NULL;
 
 	head = tokenizer(line);
-	head = check_tokens(&head);
 	cr_assert_not_null(head);
 	clear_tokens(&head);
 }
@@ -158,7 +145,22 @@ Test(check_tokens, expected_head_to_be_not_null_with_valid_command_7) {
 	struct s_tokens *head = NULL;
 
 	head = tokenizer(line);
-	head = check_tokens(&head);
 	cr_assert_not_null(head);
 	clear_tokens(&head);
+}
+
+Test(check_tokens, expected_error_stderr_single_pipe, .init=cr_redirect_stderr)
+{
+	struct s_tokens *tokens = tokenizer("|");
+
+	cr_assert_null(tokens);
+	cr_assert_stderr_eq_str("Invalid character near `|'\n");
+}
+
+Test(check_tokens, expected_error_stderr_pipe_after_pipe, .init=cr_redirect_stderr)
+{
+	struct s_tokens *tokens = tokenizer("| |");
+
+	cr_assert_null(tokens);
+	cr_assert_stderr_eq_str("Invalid character near `|'\n");
 }

@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/23 20:41:00 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/03/31 16:54:45 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/03/31 19:54:20 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,7 @@ int	main(void)
 		line = readline("gvitor-s/f-tadeu@42sp[ minishell ]$ ");
 		if (NOT line)
 			__exit(NULL);
-		if (*(line + (ft_strlen(line) - 1)) == '|'
-			&& append_command(&line))
+		if ((*(line + (ft_strlen(line) - 1)) == '|') && append_command(&line))
 			continue ;
 		tokens = tokenizer(line);
 		free(line);
