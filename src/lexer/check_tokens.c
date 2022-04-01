@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/17 23:26:01 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/04/01 00:10:02 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/04/01 17:29:33 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ struct s_tokens	*check_tokens(struct s_tokens **head)
 	struct s_tokens	*tmp;
 
 	tmp = *head;
-	if (tmp AND tmp->token == T_PIPE AND tmp->next == NULL)
+	if (tmp AND tmp->token == T_PIPE)
 		raise_tokenizer_err("Invalid character near `|'", head);
 	while (tmp)
 	{
