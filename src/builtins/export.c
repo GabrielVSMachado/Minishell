@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/13 14:27:51 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/03/28 12:22:20 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/04/01 14:34:48 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,10 @@ static int	print_envs(void)
 		tmp = g_envs.hashtbl[bucket];
 		while (tmp)
 		{
+			if (*tmp->key == '?' && tmp->next == NULL)
+				break ;
+			else if (*tmp->key == '?')
+				continue ;
 			ft_putstr_fd("declare -x ", STDOUT_FILENO);
 			ft_putstr_fd(tmp->key, STDOUT_FILENO);
 			ft_putchar_fd('=', STDOUT_FILENO);
@@ -69,9 +73,9 @@ int	export(const t_list *params)
 	while (params)
 	{
 		invalid_key = check_valid_key(params->content);
-		if (invalid_key)
+		if (invalid_key || *((char *)params->content) == '=')
 		{
-			raise_error_on_export(invalid_key);
+			raise_error_on_export(params->content);
 			params = params->next;
 			continue ;
 		}

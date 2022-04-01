@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/14 19:02:29 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/03/29 12:37:49 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/04/01 14:28:02 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,10 +36,10 @@ int	raise_env_error(void)
 	return (-1);
 }
 
-void	raise_error_on_export(int invalid_c)
+void	raise_error_on_export(char *invalid_identifier)
 {
 	ft_putstr_fd("minishell: export: ", STDERR_FILENO);
-	ft_putchar_fd(invalid_c, STDERR_FILENO);
+	ft_putstr_fd(invalid_identifier, STDERR_FILENO);
 	ft_putendl_fd(": not a valid indentifier", STDERR_FILENO);
 }
 

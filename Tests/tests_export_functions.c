@@ -104,3 +104,15 @@ Test(export, expected_key_on_envs_1, .init=cr_redirect_stderr) {
 	destroy_programs(&prog);
 	destroy_hashtbl();
 }
+
+Test(export, expected_msg_of_invalid_identifier, .init=cr_redirect_stderr)
+{
+	struct s_tokens *tok = tokenizer("export =asdfsf");
+	struct s_program *prog = parsing(tok);
+
+	clear_tokens(&tok);
+	init_hashtbl();
+	init_envs();
+	export(prog->params);
+	cr_assert_stderr_eq_str("minishell: export: =asdfsf: not a valid indentifier\n");
+}
