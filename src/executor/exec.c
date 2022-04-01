@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/17 12:52:00 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/03/30 16:49:43 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/04/01 15:34:58 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,7 +150,7 @@ int	executor(struct s_program *programs)
 		if (setup_to_exec(programs, &exec))
 			return (exit_errno(exec.tmpin, exec.tmpout));
 		if (programs->name && is_builtin(programs))
-			programs->exit_code = exec_builtin(programs, &exec.fstprg);
+			programs->exit_code = exec_builtin(programs, &exec);
 		else if (programs->name)
 		{
 			programs->pid = fork();

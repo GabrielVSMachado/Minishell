@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/28 19:13:13 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/03/28 21:31:12 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/04/01 15:30:34 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include "ft_string.h"
 #include "minishell.h"
 #include "parsing.h"
+#include <unistd.h>
 
 int	is_builtin(struct s_program *program)
 {
@@ -36,7 +37,7 @@ int	is_builtin(struct s_program *program)
 	return (program->builtin_code != -1);
 }
 
-int	exec_builtin(struct s_program *current_prog, struct s_program **first_prog)
+int	exec_builtin(struct s_program *current_prog, struct s_exec *exc)
 {
 	int	exit_status;
 
@@ -52,8 +53,12 @@ int	exec_builtin(struct s_program *current_prog, struct s_program **first_prog)
 	else if (current_prog->builtin_code == ENV)
 		env();
 	else if (current_prog->builtin_code == EXIT
-		&& (*first_prog)->builtin_code == EXIT && (*first_prog)->next == NULL)
-		__exit(first_prog);
+		&& (exc->fstprg)->builtin_code == EXIT && ((exc->fstprg))->next == NULL)
+	{
+		close(exc->tmpin);
+		close(exc->tmpout);
+		__exit(&(exc->fstprg));
+	}
 	else if (current_prog->builtin_code == PWD)
 		exit_status = pwd();
 	return (exit_status);
