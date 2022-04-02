@@ -1,0 +1,5 @@
+.cache/*
+*.json
+obj/*
+Vagrantfile
+.vagrant/

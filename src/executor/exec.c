@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/17 12:52:00 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/04/02 02:42:39 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/04/02 14:02:58 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ static int	treat_outfile(struct s_list *outfile)
 	int			fdout;
 	struct s_io	*tmp;
 
+	fdout = -1;
 	while (outfile)
 	{
 		tmp = (struct s_io *)outfile->content;

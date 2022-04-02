@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/27 19:47:37 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/04/02 05:07:23 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/04/02 14:05:34 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,8 @@ void	__exit(struct s_program **program, t_list *params)
 	ext = EXIT_SUCCESS;
 	destroy_hashtbl();
 	clear_history();
-	ft_putendl_fd("exit", STDOUT_FILENO);
+	if (program && params)
+		ft_putendl_fd("exit", STDOUT_FILENO);
 	if (params)
 		ext = check_ext_code(params);
 	if (program)
