@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/29 21:32:38 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/04/01 17:19:31 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/04/02 15:50:50 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
+#include <unistd.h>
 
 void	msg_error_on_exec(char *prog_name)
 {
@@ -29,6 +30,9 @@ void	clear_fds_on_child(struct s_program *fstp, struct s_exec *exec)
 	close(exec->tmpin);
 	close(exec->tmpout);
 	close(exec->fdin);
+	close(exec->fdout);
+	close(exec->_pipe[1]);
+	close(exec->_pipe[0]);
 }
 
 void	clear_memory(struct s_program **fstp, char **argv, char ***envp)

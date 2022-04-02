@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/17 12:52:00 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/04/02 02:42:39 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/04/02 15:43:52 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,9 +111,12 @@ static int	setup_to_exec(struct s_program *programs, struct s_exec *executor)
 	if (programs->infile)
 		executor->fdin = treat_infile(programs->infile, programs->h_pipe[0]);
 	if (executor->fdin == -1)
-		return (perror("minishell: infile"), 1);
-	dup2(executor->fdin, STDIN_FILENO);
-	close(executor->fdin);
+		perror("minishell: infile");
+	if (executor->fdin != -1)
+	{
+		dup2(executor->fdin, STDIN_FILENO);
+		close(executor->fdin);
+	}
 	if (programs->next == NULL && programs->outfile)
 		executor->fdout = treat_outfile(programs->outfile);
 	else if (programs->next == NULL)
@@ -148,7 +151,10 @@ int	executor(struct s_program *programs)
 	while (programs)
 	{
 		if (setup_to_exec(programs, &exec))
-			return (exit_errno(exec.tmpin, exec.tmpout));
+		{
+			programs = programs->next;
+			continue ;
+		}
 		if (programs->name && is_builtin(programs))
 			programs->exit_code = exec_builtin(programs, &exec);
 		else if (programs->name)
