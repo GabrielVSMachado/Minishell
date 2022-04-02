@@ -6,14 +6,16 @@
 /*   By: gvitor-s <gvitor-s>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/13 14:27:51 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/04/01 14:34:48 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/04/02 01:50:28 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "ft_string.h"
 #include "libft.h"
 #include "hashtable.h"
 #include "error.h"
 #include "linked_list.h"
+#include <stdlib.h>
 
 extern struct s_hashtbl	g_envs;
 
@@ -63,10 +65,27 @@ static int	check_valid_key(const char *word)
 	return ((word[counter] && word[counter] != '=') * (word[counter]));
 }
 
+static void	insert_key(char *param)
+{
+	char			*equal;
+	char			*key;
+
+	equal = ft_strchr(param, '=');
+	if (NOT equal)
+		return ;
+	key = ft_substr(param, 0, equal - (char *)param);
+	if (hashtbl_lookup(key))
+	{
+		insert_hashtbl(key, ft_strdup(equal + 1));
+		free(key);
+	}
+	else
+		insert_hashtbl(key, ft_strdup(equal + 1));
+}
+
 int	export(const t_list *params)
 {
-	char	*equal;
-	char	invalid_key;
+	char			invalid_key;
 
 	if (NOT params)
 		return (print_envs());
@@ -79,14 +98,7 @@ int	export(const t_list *params)
 			params = params->next;
 			continue ;
 		}
-		equal = ft_strchr(params->content, '=');
-		if (NOT equal)
-		{
-			params = params->next;
-			continue ;
-		}
-		insert_hashtbl(ft_substr(params->content, 0,
-				equal - (char *)params->content), ft_strdup(equal + 1));
+		insert_key(params->content);
 		params = params->next;
 	}
 	return (0);
