@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/31 11:39:03 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/04/02 02:01:25 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/04/02 02:45:52 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,7 @@ int	append_command(char **line)
 	pid_t			pid;
 	int				_pipe[2];
 
-	setup_signal(SIGINT, handler_append_command);
+	setup_signal(SIGINT, handler_exec);
 	if (pipe(_pipe))
 		return (perror("minishell"), 1);
 	ft_putstr_fd(*line, _pipe[1]);

@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/24 13:54:22 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/03/31 15:55:55 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/04/02 02:59:49 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,12 +21,6 @@
 #include <unistd.h>
 #include <readline/readline.h>
 
-void	handler_append_command(int sig)
-{
-	insert_hashtbl("?", ft_itoa(sig + 128));
-	write(STDOUT_FILENO, "\n", 1);
-}
-
 void	handler_heredoc(int sig, void *programs)
 {
 	static struct s_program	**_;
@@ -36,6 +30,8 @@ void	handler_heredoc(int sig, void *programs)
 		destroy_programs(_);
 		_ = NULL;
 		destroy_hashtbl();
+		rl_on_new_line();
+		rl_replace_line("", 0);
 		exit(128 + sig);
 	}
 	else
@@ -44,15 +40,13 @@ void	handler_heredoc(int sig, void *programs)
 
 void	handler_exec(int sig)
 {
-	(void)sig;
-	insert_hashtbl("?", ft_itoa(130));
+	insert_ext_code(128 + sig);
 	write(STDOUT_FILENO, "\n", 1);
-	rl_replace_line("", 0);
 }
 
 void	handler_parent(int sig)
 {
-	insert_hashtbl("?", ft_itoa(sig + 128));
+	insert_ext_code(128 + sig);
 	rl_on_new_line();
 	rl_replace_line("", 0);
 	write(STDOUT_FILENO, "\n", 1);

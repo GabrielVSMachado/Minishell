@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/09 14:23:03 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/03/21 17:19:49 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/04/02 02:41:45 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ int	init_envs(void)
 		insert_hashtbl(key, ft_strdup(p_equal + 1));
 		tmp += 1;
 	}
-	insert_hashtbl(ft_strdup("?"), ft_itoa(0));
+	insert_ext_code(0);
 	return (0);
 }
 

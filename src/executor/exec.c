@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/17 12:52:00 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/04/01 15:34:58 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/04/02 02:42:39 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,6 +160,6 @@ int	executor(struct s_program *programs)
 		programs = programs->next;
 	}
 	reset_stdin_stdout(exec.tmpin, exec.tmpout);
-	return (wait_all(exec.fstprg), insert_hashtbl("?",
-			ft_itoa(last_program(exec.fstprg)->exit_code)), 0);
+	return (wait_all(exec.fstprg),
+		insert_ext_code(last_program(exec.fstprg)->exit_code), 0);
 }
