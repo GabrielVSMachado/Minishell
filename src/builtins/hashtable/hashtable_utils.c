@@ -6,13 +6,14 @@
 /*   By: gvitor-s <gvitor-s>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/12 17:14:04 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/03/12 19:40:19 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/04/02 01:34:37 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "hashtable.h"
 #include "libft.h"
 #include <stdlib.h>
+#include "expand/envs.h"
 
 extern struct s_hashtbl	g_envs;
 
@@ -32,5 +33,5 @@ int	init_hashtbl(void)
 	if (NOT (g_envs.hashtbl))
 		return (-1);
 	g_envs.size = 0;
-	return (0);
+	return (init_envs());
 }

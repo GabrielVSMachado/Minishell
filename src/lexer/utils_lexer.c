@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/31 11:39:03 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/04/01 23:00:50 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/04/02 02:01:25 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,12 +54,13 @@ static void	exec_fork(int _pipe[2])
 	char			*line;
 	void			*handler;
 
+	destroy_hashtbl();
+	close(_pipe[0]);
 	handler_append_command_child(-1, _pipe);
 	handler = &handler_append_command_child;
 	setup_signal(SIGINT, (__sighandler_t)handler);
 	setup_signal(SIGQUIT, SIG_IGN);
-	destroy_hashtbl();
-	while (close(_pipe[0]), 1)
+	while (1)
 	{
 		line = readline("> ");
 		if (line == NULL)
@@ -70,8 +71,7 @@ static void	exec_fork(int _pipe[2])
 		if (NOT tokens)
 			clean(_pipe[1], &line, EXIT_FAILURE);
 		if (ft_putstr_fd(line, _pipe[1]), last_token(tokens)->token != T_PIPE)
-			return (clear_tokens(&tokens), clean(_pipe[1], &line,
-					EXIT_SUCCESS));
+			return (clear_tokens(&tokens), clean(_pipe[1], &line, 0));
 		clear_tokens(&tokens);
 		free(line);
 	}
