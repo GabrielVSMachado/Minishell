@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/31 11:39:03 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/04/02 02:45:52 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/04/02 04:54:16 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,6 +119,6 @@ int	append_command(char **line)
 		get_new_value_from_pipe(line, _pipe[0]);
 	close(_pipe[0]);
 	if (ext_code == 3)
-		__exit(NULL);
+		__exit(NULL, NULL);
 	return (ext_code);
 }
