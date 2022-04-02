@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/31 11:39:03 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/03/31 19:56:25 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/04/01 23:00:50 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,10 +69,10 @@ static void	exec_fork(int _pipe[2])
 		tokens = tokenizer(line);
 		if (NOT tokens)
 			clean(_pipe[1], &line, EXIT_FAILURE);
+		if (ft_putstr_fd(line, _pipe[1]), last_token(tokens)->token != T_PIPE)
+			return (clear_tokens(&tokens), clean(_pipe[1], &line,
+					EXIT_SUCCESS));
 		clear_tokens(&tokens);
-		ft_putstr_fd(line, _pipe[1]);
-		if (*(line + (ft_strlen(line) - 1)) != '|')
-			clean(_pipe[1], &line, EXIT_SUCCESS);
 		free(line);
 	}
 }
@@ -103,8 +103,6 @@ int	append_command(char **line)
 	pid_t			pid;
 	int				_pipe[2];
 
-	if (NOT tokenizer(*line))
-		return (free(*line), 1);
 	setup_signal(SIGINT, handler_append_command);
 	if (pipe(_pipe))
 		return (perror("minishell"), 1);
