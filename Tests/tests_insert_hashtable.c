@@ -11,7 +11,6 @@ Test(insert_hashtbl, expected_pointer_value_not_null) {
 	value = hashtbl_lookup(strdup("pamonha"));
 	cr_assert_str_eq(value->key, "pamonha");
 	cr_assert_str_eq(value->val, "de piracicaba");
-	cr_assert(g_envs.size == 1);
 }
 
 Test(insert_hashtbl, expected_pointer_value_null) {
