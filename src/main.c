@@ -6,23 +6,20 @@
 /*   By: gvitor-s <gvitor-s@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/23 20:41:00 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/04/04 01:58:33 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/04/04 02:28:40 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "executor.h"
-#include "executor/utils_exec.h"
-#include "hashtable.h"
-#include "libft.h"
-#include "parsing.h"
-#include "tokenizer.h"
 #include "signals.h"
-#include "expand/envs.h"
+#include "executor/utils_exec.h"
+#include "executor.h"
+#include "hashtable.h"
+#include "parsing.h"
+#include "minishell.h"
 #include <stdio.h>
 #include <readline/readline.h>
 #include <readline/history.h>
 #include <stdlib.h>
-#include "minishell.h"
 
 static void	exec_commands(struct s_program **programs)
 {

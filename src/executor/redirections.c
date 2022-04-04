@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/03 16:43:13 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/04/04 01:28:16 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/04/04 02:40:56 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,16 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <sys/stat.h>
+
+static int	set_fd(int *fd, struct s_io *io, int (*f)(struct s_io *))
+{
+	if (*fd != -1)
+		close(*fd);
+	*fd = f(io);
+	if (*fd == -1)
+		return (1);
+	return (0);
+}
 
 static int	open_infiles(struct s_io *infile)
 {
@@ -52,27 +62,19 @@ int	exc_redirections(struct s_list *files, int *hr_pipe,
 		io = files->content;
 		if (io->type == INFILE)
 		{
-			if (exc->fdin != -1)
-				close(exc->fdin);
 			if (*hr_pipe != -1)
 			{
 				close(*hr_pipe);
 				*hr_pipe = -1;
 			}
-			exc->fdin = open_infiles(io);
-			if (exc->fdin == -1)
+			if (set_fd(&exc->fdin, io, open_infiles))
 				return (1);
 		}
 		else if (io->type == APPINFILE)
 			exc->fdin = *hr_pipe;
 		else
-		{
-			if (exc->fdout != -1)
-				close(exc->fdout);
-			exc->fdout = open_outfile(io);
-			if (exc->fdout == -1)
+			if (set_fd(&exc->fdout, io, open_outfile))
 				return (1);
-		}
 		files = files->next;
 	}
 	return (0);

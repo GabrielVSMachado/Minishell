@@ -6,31 +6,42 @@
 /*   By: gvitor-s <gvitor-s>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/17 12:52:00 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/04/04 01:54:00 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/04/04 02:32:17 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "signals.h"
-#include "expand_str.h"
-#include "ft_stdio.h"
-#include "ft_stdlib.h"
-#include "ft_string.h"
-#include "hashtable.h"
-#include "linked_list.h"
-#include "parsing.h"
-#include "tokenizer.h"
-#include <signal.h>
-#include <stddef.h>
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <sys/types.h>
-#include <sys/wait.h>
-#include <unistd.h>
-#include <fcntl.h>
-#include <errno.h>
-#include "utils_exec.h"
+#include "signals.h"
 #include "error.h"
+#include "parsing.h"
+#include "minishell.h"
+#include "hashtable.h"
+#include "executor/utils_exec.h"
+
+static int	not_builtin(struct s_program *programs, struct s_exec *exc)
+{
+	char				**envp;
+	char *const			*argv;
+	int					ext_code;
+
+	argv = gen_argv(programs->params, programs->name);
+	envp = gen_envp();
+	if (ft_strchr(programs->name, '/'))
+	{
+		if (isdir(programs->name))
+			msg_dir(programs->name);
+		else
+		{
+			execve(programs->name, argv, envp);
+			msg_error_on_exec(programs->name);
+		}
+		ext_code = 126;
+	}
+	else
+		ext_code = exec_from_path(programs->name, argv, envp);
+	clear_memory(&exc->fstprg, (char **)argv, &envp);
+	return (ext_code);
+}
 
 static int	setup_to_exec(struct s_program *program, struct s_exec *exc)
 {
@@ -62,8 +73,6 @@ static int	setup_to_exec(struct s_program *program, struct s_exec *exc)
 
 static void	exec_child(struct s_program *programs, struct s_exec *exec)
 {
-	char				**envp;
-	char *const			*argv;
 	int					exit_code;
 
 	setup_signal(SIGQUIT, SIG_DFL);
@@ -79,26 +88,31 @@ static void	exec_child(struct s_program *programs, struct s_exec *exec)
 		clear_memory(&exec->fstprg, NULL, NULL);
 	}
 	else
-	{
-		argv = gen_argv(programs->params, programs->name);
-		envp = gen_envp();
-		if (ft_strchr(programs->name, '/'))
-		{
-			if (isdir(programs->name))
-				msg_dir(programs->name);
-			else
-			{
-				execve(programs->name, argv, envp);
-				msg_error_on_exec(programs->name);
-			}
-			exit_code = 126;
-		}
-		else
-			exit_code = exec_from_path(programs->name, argv, envp);
-		clear_memory(&exec->fstprg, (char **)argv, &envp);
-	}
+		exit_code = not_builtin(programs, exec);
 	destroy_hashtbl();
 	exit(exit_code);
+}
+
+static void	setup_parent(struct s_program *programs, struct s_exec *exc)
+{
+	if (programs->next != NULL)
+	{
+		if (pipe(exc->_pipe) == -1)
+		{
+			perror("minishell: pipe");
+			__exit(&exc->fstprg, NULL);
+		}
+		exc->fdin = exc->_pipe[0];
+		exc->fdout = exc->_pipe[1];
+	}
+	else
+		exc->fdout = dup(exc->tmpout);
+	dup2(exc->fdout, STDOUT_FILENO);
+	close(exc->fdout);
+	exc->fdout = -1;
+	programs->pid = fork();
+	if (programs->pid == 0)
+		exec_child(programs, exc);
 }
 
 void	exec_pipeline(struct s_program *programs)
@@ -117,28 +131,7 @@ void	exec_pipeline(struct s_program *programs)
 		close(exc.fdin);
 		exc.fdin = -1;
 		if (programs->name)
-		{
-			if (programs->next != NULL)
-			{
-				if (pipe(exc._pipe) == -1)
-				{
-					perror("minishell: pipe");
-					destroy_hashtbl();
-					destroy_programs(&exc.fstprg);
-					exit(errno);
-				}
-				exc.fdin = exc._pipe[0];
-				exc.fdout = exc._pipe[1];
-			}
-			else
-				exc.fdout = dup(exc.tmpout);
-			dup2(exc.fdout, STDOUT_FILENO);
-			close(exc.fdout);
-			exc.fdout = -1;
-			programs->pid = fork();
-			if (programs->pid == 0)
-				exec_child(programs, &exc);
-		}
+			setup_parent(programs, &exc);
 		programs = programs->next;
 	}
 	reset_stdin_stdout(exc.tmpin, exc.tmpout);

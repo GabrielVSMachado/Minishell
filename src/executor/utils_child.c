@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/29 21:32:38 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/04/04 01:53:44 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/04/04 02:28:58 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,17 +14,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
-#include <sys/stat.h>
 #include <unistd.h>
-
-int	is_valid_fd(int fd)
-{
-	struct stat	buff;
-
-	if (fstat(fd, &buff) == 0)
-		return (1);
-	return (0);
-}
 
 void	msg_error_on_exec(char *prog_name)
 {

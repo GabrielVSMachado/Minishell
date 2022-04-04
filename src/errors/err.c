@@ -6,19 +6,13 @@
 /*   By: gvitor-s <gvitor-s@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/14 19:02:29 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/04/01 14:28:02 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/04/04 02:32:47 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_stdlib.h"
-#include "libft.h"
 #include "tokenizer.h"
-#include <errno.h>
-#include <string.h>
-#include <stdio.h>
-#include <unistd.h>
+#include "parsing.h"
 #include "hashtable.h"
-#include "executor/utils_exec.h"
 
 int	raise_tokenizer_err(char const *msg, struct s_tokens **info)
 {
