@@ -1,3 +1,6 @@
 .cache/
 *.json
 *.supp
+*.a
+*.o
+minishell

@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/17 12:52:00 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/04/04 02:32:17 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/04/04 03:42:30 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 #include "minishell.h"
 #include "hashtable.h"
 #include "executor/utils_exec.h"
+#include <errno.h>
 
 static int	not_builtin(struct s_program *programs, struct s_exec *exc)
 {
@@ -35,7 +36,7 @@ static int	not_builtin(struct s_program *programs, struct s_exec *exc)
 			execve(programs->name, argv, envp);
 			msg_error_on_exec(programs->name);
 		}
-		ext_code = 126;
+		ext_code = 126 + (errno == ENOENT);
 	}
 	else
 		ext_code = exec_from_path(programs->name, argv, envp);
@@ -77,18 +78,24 @@ static void	exec_child(struct s_program *programs, struct s_exec *exec)
 
 	setup_signal(SIGQUIT, SIG_DFL);
 	setup_signal(SIGINT, SIG_DFL);
+	exit_code = 0;
 	if (exec->fdin != -1)
 		close(exec->fdin);
 	exec->fdin = -1;
 	setup_to_exec(programs, exec);
 	clear_fds_on_child(exec->fstprg, exec);
-	if (is_builtin(programs))
+	if (programs->name)
 	{
-		exit_code = exec_builtin(programs, exec);
-		clear_memory(&exec->fstprg, NULL, NULL);
+		if (is_builtin(programs))
+		{
+			exit_code = exec_builtin(programs, exec);
+			clear_memory(&exec->fstprg, NULL, NULL);
+		}
+		else
+			exit_code = not_builtin(programs, exec);
 	}
 	else
-		exit_code = not_builtin(programs, exec);
+		clear_memory(&exec->fstprg, NULL, NULL);
 	destroy_hashtbl();
 	exit(exit_code);
 }
@@ -130,8 +137,7 @@ void	exec_pipeline(struct s_program *programs)
 		dup2(exc.fdin, STDIN_FILENO);
 		close(exc.fdin);
 		exc.fdin = -1;
-		if (programs->name)
-			setup_parent(programs, &exc);
+		setup_parent(programs, &exc);
 		programs = programs->next;
 	}
 	reset_stdin_stdout(exc.tmpin, exc.tmpout);
