@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/17 12:52:00 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/04/02 15:43:52 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/04/04 01:54:00 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,60 +25,42 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/types.h>
+#include <sys/wait.h>
 #include <unistd.h>
 #include <fcntl.h>
 #include <errno.h>
 #include "utils_exec.h"
 #include "error.h"
 
-static int	treat_outfile(struct s_list *outfile)
+static int	setup_to_exec(struct s_program *program, struct s_exec *exc)
 {
-	int			fdout;
-	struct s_io	*tmp;
-
-	while (outfile)
+	if (exc_redirections(program->r_io, &program->h_pipe[0], exc))
 	{
-		tmp = (struct s_io *)outfile->content;
-		fdout = open(tmp->file, O_WRONLY | O_APPEND * (tmp->type == APPOUTFILE)
-				| O_TRUNC * (tmp->type != APPOUTFILE) | O_CREAT | O_CLOEXEC,
-				S_IWUSR | S_IRUSR | S_IRGRP | S_IROTH);
-		outfile = outfile->next;
-		if (outfile)
-			close(fdout);
+		if (exc->fdin != -1)
+			close(exc->fdin);
+		if (exc->fdout != -1)
+			close(exc->fdout);
+		clear_fds_on_child(exc->fstprg, exc);
+		destroy_hashtbl();
+		destroy_programs(&exc->fstprg);
+		exit(1);
 	}
-	return (fdout);
+	if (exc->fdin != -1)
+	{
+		dup2(exc->fdin, STDIN_FILENO);
+		close(exc->fdin);
+		exc->fdin = -1;
+	}
+	if (exc->fdout != -1)
+	{
+		dup2(exc->fdout, STDOUT_FILENO);
+		close(exc->fdout);
+		exc->fdout = -1;
+	}
+	return (0);
 }
 
-static int	treat_infile(struct s_list *infile, int r_pipe)
-{
-	int			fdin;
-	struct s_io	*tmp;
-	int			save_errno;
-
-	fdin = r_pipe;
-	while (infile)
-	{
-		tmp = (struct s_io *)infile->content;
-		if (tmp->type != APPINFILE)
-		{
-			if (r_pipe != -1)
-			{
-				save_errno = errno;
-				(void)close(r_pipe);
-				errno = save_errno;
-				r_pipe = -1;
-			}
-			if (fdin != r_pipe)
-				close(fdin);
-			fdin = open(tmp->file, O_RDONLY | O_CLOEXEC);
-		}
-		infile = infile->next;
-	}
-	return (fdin);
-}
-
-static void	exec_child(struct s_program *programs, struct s_program **fstp,
-		struct s_exec *exec)
+static void	exec_child(struct s_program *programs, struct s_exec *exec)
 {
 	char				**envp;
 	char *const			*argv;
@@ -86,86 +68,80 @@ static void	exec_child(struct s_program *programs, struct s_program **fstp,
 
 	setup_signal(SIGQUIT, SIG_DFL);
 	setup_signal(SIGINT, SIG_DFL);
-	clear_fds_on_child(*fstp, exec);
-	argv = gen_argv(programs->params, programs->name);
-	envp = gen_envp();
-	if (ft_strchr(programs->name, '/'))
+	if (exec->fdin != -1)
+		close(exec->fdin);
+	exec->fdin = -1;
+	setup_to_exec(programs, exec);
+	clear_fds_on_child(exec->fstprg, exec);
+	if (is_builtin(programs))
 	{
-		if (isdir(programs->name))
-			msg_dir(programs->name);
+		exit_code = exec_builtin(programs, exec);
+		clear_memory(&exec->fstprg, NULL, NULL);
+	}
+	else
+	{
+		argv = gen_argv(programs->params, programs->name);
+		envp = gen_envp();
+		if (ft_strchr(programs->name, '/'))
+		{
+			if (isdir(programs->name))
+				msg_dir(programs->name);
+			else
+			{
+				execve(programs->name, argv, envp);
+				msg_error_on_exec(programs->name);
+			}
+			exit_code = 126;
+		}
 		else
-		{
-			execve(programs->name, argv, envp);
-			msg_error_on_exec(programs->name);
-		}
-		exit_code = 126;
+			exit_code = exec_from_path(programs->name, argv, envp);
+		clear_memory(&exec->fstprg, (char **)argv, &envp);
 	}
-	else
-		exit_code = exec_from_path(programs->name, argv, envp);
-	return (clear_memory(fstp, (char **)argv, &envp), destroy_hashtbl(),
-		exit(exit_code));
+	destroy_hashtbl();
+	exit(exit_code);
 }
 
-static int	setup_to_exec(struct s_program *programs, struct s_exec *executor)
+void	exec_pipeline(struct s_program *programs)
 {
-	if (programs->infile)
-		executor->fdin = treat_infile(programs->infile, programs->h_pipe[0]);
-	if (executor->fdin == -1)
-		perror("minishell: infile");
-	if (executor->fdin != -1)
-	{
-		dup2(executor->fdin, STDIN_FILENO);
-		close(executor->fdin);
-	}
-	if (programs->next == NULL && programs->outfile)
-		executor->fdout = treat_outfile(programs->outfile);
-	else if (programs->next == NULL)
-		executor->fdout = dup(executor->tmpout);
-	else
-	{
-		if (pipe(executor->_pipe) == -1)
-			return (perror("minishell: pipe"), 1);
-		executor->fdin = executor->_pipe[0];
-		executor->fdout = executor->_pipe[1];
-		if (programs->outfile)
-		{
-			close(executor->fdout);
-			executor->fdout = treat_outfile(programs->outfile);
-		}
-	}
-	if (executor->fdout == -1)
-		return (perror("minishell: fdout"), 1);
-	return (dup2(executor->fdout, STDOUT_FILENO), close(executor->fdout), 0);
-}
+	struct s_exec	exc;
 
-int	executor(struct s_program *programs)
-{
-	struct s_exec		exec;
-
+	exc.tmpin = dup(STDIN_FILENO);
+	exc.tmpout = dup(STDOUT_FILENO);
+	exc.fdin = dup(STDIN_FILENO);
 	setup_signal(SIGINT, handler_exec);
-	exec.tmpin = dup(STDIN_FILENO);
-	exec.tmpout = dup(STDOUT_FILENO);
-	if (NOT programs->infile)
-		exec.fdin = dup(exec.tmpin);
-	exec.fstprg = programs;
+	setup_signal(SIGQUIT, SIG_DFL);
+	exc.fstprg = programs;
 	while (programs)
 	{
-		if (setup_to_exec(programs, &exec))
+		dup2(exc.fdin, STDIN_FILENO);
+		close(exc.fdin);
+		exc.fdin = -1;
+		if (programs->name)
 		{
-			programs = programs->next;
-			continue ;
-		}
-		if (programs->name && is_builtin(programs))
-			programs->exit_code = exec_builtin(programs, &exec);
-		else if (programs->name)
-		{
+			if (programs->next != NULL)
+			{
+				if (pipe(exc._pipe) == -1)
+				{
+					perror("minishell: pipe");
+					destroy_hashtbl();
+					destroy_programs(&exc.fstprg);
+					exit(errno);
+				}
+				exc.fdin = exc._pipe[0];
+				exc.fdout = exc._pipe[1];
+			}
+			else
+				exc.fdout = dup(exc.tmpout);
+			dup2(exc.fdout, STDOUT_FILENO);
+			close(exc.fdout);
+			exc.fdout = -1;
 			programs->pid = fork();
 			if (programs->pid == 0)
-				exec_child(programs, &exec.fstprg, &exec);
+				exec_child(programs, &exc);
 		}
 		programs = programs->next;
 	}
-	reset_stdin_stdout(exec.tmpin, exec.tmpout);
-	return (wait_all(exec.fstprg),
-		insert_ext_code(last_program(exec.fstprg)->exit_code), 0);
+	reset_stdin_stdout(exc.tmpin, exc.tmpout);
+	wait_all(exc.fstprg);
+	insert_ext_code(last_program(exc.fstprg)->exit_code);
 }

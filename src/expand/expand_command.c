@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/11 19:59:48 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/03/22 20:23:53 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/04/03 22:01:10 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,14 +19,7 @@ void	expand_program(struct s_program *programs)
 	struct s_io			*content;
 
 	expand_command(&programs->name);
-	tmp = programs->infile;
-	while (tmp)
-	{
-		content = (struct s_io *)tmp->content;
-		expand_command(&content->file);
-		tmp = tmp->next;
-	}
-	tmp = programs->outfile;
+	tmp = programs->r_io;
 	while (tmp)
 	{
 		content = (struct s_io *)tmp->content;

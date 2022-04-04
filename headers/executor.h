@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/17 14:08:15 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/03/20 21:08:08 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/04/03 23:04:19 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,5 +15,5 @@
 
 # include "parsing.h"
 
-int	executor(struct s_program *programs);
+int	exec_pipeline(struct s_program *programs);
 #endif

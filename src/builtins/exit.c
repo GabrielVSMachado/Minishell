@@ -6,10 +6,11 @@
 /*   By: gvitor-s <gvitor-s>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/27 19:47:37 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/04/02 05:07:23 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/04/04 01:39:25 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "executor/utils_exec.h"
 #include "ft_stdio.h"
 #include "hashtable.h"
 #include "linked_list.h"
@@ -59,7 +60,8 @@ void	__exit(struct s_program **program, t_list *params)
 	ext = EXIT_SUCCESS;
 	destroy_hashtbl();
 	clear_history();
-	ft_putendl_fd("exit", STDOUT_FILENO);
+	if (NOT program || (*program)->builtin_code == EXIT)
+		ft_putendl_fd("exit", STDOUT_FILENO);
 	if (params)
 		ext = check_ext_code(params);
 	if (program)

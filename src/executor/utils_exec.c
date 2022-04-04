@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/19 11:44:37 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/03/29 12:26:20 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/04/03 22:02:30 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,9 +99,15 @@ void	clear_fds_on_programs(struct s_program *programs)
 	while (programs)
 	{
 		if (programs->h_pipe[0] != -1)
+		{
 			close(programs->h_pipe[0]);
+			programs->h_pipe[0] = -1;
+		}
 		if (programs->h_pipe[1] != -1)
+		{
 			close(programs->h_pipe[1]);
+			programs->h_pipe[1] = -1;
+		}
 		programs = programs->next;
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 14:57:57 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/03/30 12:41:07 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/04/03 20:56:58 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,7 @@ struct	s_program
 	int					builtin_code;
 	int					exit_code;
 	t_list				*params;
-	t_list				*infile;
-	t_list				*outfile;
+	t_list				*r_io;
 	struct s_program	*next;
 };
 

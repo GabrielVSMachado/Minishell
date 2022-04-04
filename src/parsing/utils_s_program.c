@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 16:04:46 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/03/30 13:11:45 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/04/03 22:01:40 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,8 @@ struct s_program	*new_program(char *name)
 	new_p->h_pipe[1] = -1;
 	new_p->builtin_code = -1;
 	new_p->exit_code = -1;
-	new_p->infile = NULL;
 	new_p->params = NULL;
-	new_p->outfile = NULL;
+	new_p->r_io = NULL;
 	new_p->next = NULL;
 	return (new_p);
 }
@@ -76,8 +75,7 @@ void	destroy_programs(struct s_program **head)
 	while (*head)
 	{
 		tmp = (*head)->next;
-		ft_lstclear(&(*head)->infile, clear_struct_io);
-		ft_lstclear(&(*head)->outfile, clear_struct_io);
+		ft_lstclear(&(*head)->r_io, clear_struct_io);
 		ft_lstclear(&(*head)->params, free);
 		free((*head)->name);
 		free(*head);

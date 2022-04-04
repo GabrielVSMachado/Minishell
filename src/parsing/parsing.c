@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 14:55:01 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/03/27 13:57:27 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/04/03 20:57:18 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ static void	add_outfile(struct s_program **program, struct s_tokens **head)
 	if (NOT (*program))
 		add_program(program, new_program(NULL));
 	last = last_program(*program);
-	ft_lstadd_back(&last->outfile, ft_lstnew(
+	ft_lstadd_back(&last->r_io, ft_lstnew(
 			new_io(ft_strdup((*head)->next->value),
 				OUTFILE * ((*head)->token == T_ROUTPUT)
 				+ APPOUTFILE * ((*head)->token == T_RAOUTPUT)
@@ -60,7 +60,7 @@ static void	add_infile(struct s_program **program, struct s_tokens **head)
 	if (NOT (*program))
 		add_program(program, new_program(NULL));
 	last = last_program(*program);
-	ft_lstadd_back(&last->infile, ft_lstnew(
+	ft_lstadd_back(&last->r_io, ft_lstnew(
 			new_io(ft_strdup((*head)->next->value),
 				INFILE * ((*head)->token == T_RINPUT)
 				+ APPINFILE * ((*head)->token == T_HEREDOC)

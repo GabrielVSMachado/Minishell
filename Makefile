@@ -70,6 +70,7 @@ define FILES
 	check_dir.c
 	utils_child.c
 	utils_lexer.c
+	redirections.c
 endef
 
 define	TEST_FILES

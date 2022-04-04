@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/19 12:08:24 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/04/01 15:30:50 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/04/03 22:46:49 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,9 @@ enum e_builtin
 	EXIT
 };
 
+int			is_valid_fd(int fd);
+int			exc_redirections(struct s_list *files, int *hr_pipe,
+				struct s_exec *exc);
 void		msg_error_on_exec(char *prog_name);
 void		clear_memory(struct s_program **fstp, char **argv, char ***envp);
 void		clear_fds_on_child(struct s_program *fstp, struct s_exec *exec);

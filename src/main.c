@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/23 20:41:00 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/04/02 04:13:13 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/04/04 01:58:33 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,23 @@
 #include <readline/history.h>
 #include <stdlib.h>
 #include "minishell.h"
+
+static void	exec_commands(struct s_program **programs)
+{
+	struct s_exec	_;
+
+	_.fstprg = *programs;
+	_.tmpin = -1;
+	_.tmpout = -1;
+	if (exec_heredocs(*programs) == -1)
+		return ;
+	if (*programs && (*programs)->next)
+		exec_pipeline(*programs);
+	else if ((*programs)->name && is_builtin(*programs))
+		insert_ext_code(exec_builtin(*programs, &_));
+	else
+		exec_pipeline(*programs);
+}
 
 static int	check_append_commands(char **line)
 {
@@ -46,9 +63,10 @@ int	main(void)
 	struct s_program	*programs;
 
 	init_hashtbl();
-	while (setup_signal(SIGQUIT, SIG_IGN), TRUE)
+	while (TRUE)
 	{
 		setup_signal(SIGINT, handler_parent);
+		setup_signal(SIGQUIT, SIG_IGN);
 		line = readline("gvitor-s/f-tadeu@42sp[ minishell ]$ ");
 		if (NOT line)
 			__exit(NULL, NULL);
@@ -61,9 +79,8 @@ int	main(void)
 		add_history(line);
 		free(line);
 		programs = parsing(tokens);
-		if (clear_tokens(&tokens), programs && exec_heredocs(programs) != -1)
-			executor(programs);
+		clear_tokens(&tokens);
+		exec_commands(&programs);
 		destroy_programs(&programs);
 	}
-	return (0);
 }

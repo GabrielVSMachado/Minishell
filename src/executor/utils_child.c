@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/29 21:32:38 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/04/02 15:50:50 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/04/04 01:53:44 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,17 @@
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
+#include <sys/stat.h>
 #include <unistd.h>
+
+int	is_valid_fd(int fd)
+{
+	struct stat	buff;
+
+	if (fstat(fd, &buff) == 0)
+		return (1);
+	return (0);
+}
 
 void	msg_error_on_exec(char *prog_name)
 {
@@ -29,16 +39,13 @@ void	clear_fds_on_child(struct s_program *fstp, struct s_exec *exec)
 	clear_fds_on_programs(fstp);
 	close(exec->tmpin);
 	close(exec->tmpout);
-	close(exec->fdin);
-	close(exec->fdout);
-	close(exec->_pipe[1]);
-	close(exec->_pipe[0]);
 }
 
 void	clear_memory(struct s_program **fstp, char **argv, char ***envp)
 {
 	free(argv);
-	delete_envp(*envp);
+	if (envp)
+		delete_envp(*envp);
 	destroy_programs(fstp);
 }
 

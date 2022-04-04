@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/19 13:19:30 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/03/27 13:18:25 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/04/03 20:57:32 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ int	exec_heredocs(struct s_program *programs)
 	setup_signal(SIGINT, handler_exec);
 	while (programs)
 	{
-		infile = programs->infile;
+		infile = programs->r_io;
 		while (infile)
 		{
 			content = infile->content;
