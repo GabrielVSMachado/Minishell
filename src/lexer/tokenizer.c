@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/09 22:28:40 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/03/31 22:35:40 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/04/06 23:22:22 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,9 @@ static int	is_special(char	const c)
 	return (ft_strchr("|<>", c) != NULL);
 }
 
-static int	is_space(char const c)
+static int	is_space_or_tab(char const c)
 {
-	return (c == ' ');
+	return (c == ' ' || c == '\t');
 }
 
 static void	which_other_tokens(struct s_tokens **head, char const *line,
@@ -49,7 +49,7 @@ static int	treat_words(struct s_tokens **head, char const *line,
 
 	counter = *cursor;
 	while (line[counter] != '\0'
-		&& NOT is_space(line[counter])
+		&& NOT is_space_or_tab(line[counter])
 		&& NOT is_special(line[counter]))
 	{
 		c = ('\'' * (line[counter] == '\''))
@@ -84,7 +84,7 @@ struct s_tokens	*tokenizer(char const *line)
 			which_other_tokens(&head, line, &cursor);
 			continue ;
 		}
-		else if (NOT is_space(line[cursor]))
+		else if (NOT is_space_or_tab(line[cursor]))
 		{
 			if (treat_words(&head, line, &cursor) == -1)
 				return (clear_tokens(&head), NULL);
