@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/05 16:19:37 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/03/22 20:22:14 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/04/07 00:25:03 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,5 @@
 
 void	expand_quotes(char **command);
 void	expand_env_variables(char **word);
-void	expand_command(char **word);
-void	expand_program(struct s_program *programs);
+void	expand_all(struct s_program *programs);
 #endif

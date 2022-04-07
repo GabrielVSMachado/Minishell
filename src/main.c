@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/23 20:41:00 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/04/04 02:28:40 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/04/07 00:25:56 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include "hashtable.h"
 #include "parsing.h"
 #include "minishell.h"
+#include "expand_str.h"
 #include <stdio.h>
 #include <readline/readline.h>
 #include <readline/history.h>
@@ -23,17 +24,20 @@
 
 static void	exec_commands(struct s_program **programs)
 {
-	struct s_exec	_;
+	struct s_exec	exc;
 
-	_.fstprg = *programs;
-	_.tmpin = -1;
-	_.tmpout = -1;
 	if (exec_heredocs(*programs) == -1)
 		return ;
-	if (*programs && (*programs)->next)
-		exec_pipeline(*programs);
-	else if ((*programs)->name && is_builtin(*programs))
-		insert_ext_code(exec_builtin(*programs, &_));
+	expand_all(*programs);
+	if (NOT (*programs)->next && is_builtin(*programs))
+	{
+		exc.fstprg = *programs;
+		exc.tmpin = dup(STDIN_FILENO);
+		exc.tmpout = dup(STDOUT_FILENO);
+		exc.fdin = -1;
+		exc.fdout = -1;
+		insert_ext_code(exec_builtin_parent(*programs, &exc));
+	}
 	else
 		exec_pipeline(*programs);
 }
@@ -77,7 +81,8 @@ int	main(void)
 		free(line);
 		programs = parsing(tokens);
 		clear_tokens(&tokens);
-		exec_commands(&programs);
+		if (programs)
+			exec_commands(&programs);
 		destroy_programs(&programs);
 	}
 }

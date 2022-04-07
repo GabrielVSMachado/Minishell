@@ -1,7 +1,7 @@
 NAME	= minishell
 RM		= rm -rf
 ARCH	:= $(findstring Arch,$(file < /etc/os-release))
-CFLAGS	= -Wall -Wextra -Werror -O2
+CFLAGS	= -Wall -Wextra -Werror -g
 
 ifeq ($(ARCH),Arch)
 	CC	=	gcc

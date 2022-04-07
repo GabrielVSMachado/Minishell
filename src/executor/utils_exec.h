@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/19 12:08:24 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/04/04 02:29:17 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/04/04 04:31:31 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,8 @@ void		clear_memory(struct s_program **fstp, char **argv, char ***envp);
 void		clear_fds_on_child(struct s_program *fstp, struct s_exec *exec);
 void		msg_dir(char *program_name);
 int			isdir(char *program_name);
-int			exec_builtin(struct s_program *current_prog, struct s_exec *exc);
+int			exec_builtin_pipeline(struct s_program *current_prog,
+				struct s_exec *exc);
 int			is_builtin(struct s_program *program);
 void		print_msg_command_not_found(char *name);
 int			exec_heredocs(struct s_program *programs);
@@ -55,4 +56,6 @@ char		**gen_envp(void);
 void		delete_envp(char **envp);
 char		*check_path(char const *program_name);
 int			exec_from_path(char *program_name, char *const *argv, char **envp);
+int			exec_builtin_parent(struct s_program *current_prog,
+				struct s_exec *exc);
 #endif
