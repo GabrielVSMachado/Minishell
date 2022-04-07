@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/28 16:35:20 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/03/28 17:18:12 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/04/07 00:33:21 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,15 +51,17 @@ int	echo(struct s_list *params)
 		ft_putendl_fd("", STDOUT_FILENO);
 	else
 	{
-		if (NOT ft_strcmp(params->content, "-n"))
-		{
-			to_print = join_params(params->next);
-			ft_putstr_fd(to_print, STDOUT_FILENO);
-		}
-		else
+		if (ft_strcmp(params->content, "-n"))
 		{
 			to_print = join_params(params);
 			ft_putendl_fd(to_print, STDOUT_FILENO);
+		}
+		else
+		{
+			while (NOT ft_strcmp(params->content, "-n"))
+				params = params->next;
+			to_print = join_params(params);
+			ft_putstr_fd(to_print, STDOUT_FILENO);
 		}
 		free(to_print);
 	}
