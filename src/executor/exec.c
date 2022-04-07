@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/17 12:52:00 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/04/04 03:42:30 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/04/06 23:27:32 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,7 +130,6 @@ void	exec_pipeline(struct s_program *programs)
 	exc.tmpout = dup(STDOUT_FILENO);
 	exc.fdin = dup(STDIN_FILENO);
 	setup_signal(SIGINT, handler_exec);
-	setup_signal(SIGQUIT, SIG_DFL);
 	exc.fstprg = programs;
 	while (programs)
 	{
