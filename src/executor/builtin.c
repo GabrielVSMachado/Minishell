@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/28 19:13:13 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/04/07 00:20:49 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/04/07 12:12:22 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,7 @@ int	exec_builtin_parent(struct s_program *current_prog, struct s_exec *exc)
 	else if (current_prog->builtin_code == EXIT)
 	{
 		reset_stdin_stdout(exc->tmpin, exc->tmpout);
-		__exit(&(exc->fstprg), current_prog->params);
+		exit_status = __exit(&(exc->fstprg), current_prog->params);
 	}
 	else if (current_prog->builtin_code == PWD)
 		exit_status = pwd();

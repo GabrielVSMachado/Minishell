@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/27 19:47:37 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/04/04 01:39:25 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/04/07 12:20:08 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ static int	is_numeric_arg(char *arg)
 {
 	while (arg && *arg)
 	{
-		if (NOT ft_isdigit(*arg))
+		if (NOT ft_isdigit(*arg) && *arg != '-' && *arg != '+')
 			return (0);
 		arg++;
 	}
@@ -38,10 +38,9 @@ static int	check_ext_code(t_list *params)
 		if (params->next)
 		{
 			ft_putendl_fd("minishell: exit: too many args", STDERR_FILENO);
-			return (EXIT_FAILURE);
+			return (1);
 		}
-		else
-			return (ft_atoi(params->content));
+		return (0);
 	}
 	else
 	{
@@ -53,17 +52,21 @@ static int	check_ext_code(t_list *params)
 	}
 }
 
-void	__exit(struct s_program **program, t_list *params)
+int	__exit(struct s_program **program, t_list *params)
 {
 	int	ext;
 
 	ext = EXIT_SUCCESS;
+	ft_putendl_fd("exit", STDOUT_FILENO);
+	if (params)
+	{
+		ext = check_ext_code(params);
+		if (ext == 1)
+			return (1);
+		ext = 2 * (ext == 2) + (ext != 2) * ft_atoi(params->content);
+	}
 	destroy_hashtbl();
 	clear_history();
-	if (NOT program || (*program)->builtin_code == EXIT)
-		ft_putendl_fd("exit", STDOUT_FILENO);
-	if (params)
-		ext = check_ext_code(params);
 	if (program)
 		destroy_programs(program);
 	exit(ext);
