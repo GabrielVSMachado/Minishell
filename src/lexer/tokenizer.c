@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/09 22:28:40 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/04/06 23:22:22 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/04/07 22:57:10 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ static int	is_special(char	const c)
 
 static int	is_space_or_tab(char const c)
 {
-	return (c == ' ' || c == '\t');
+	return (c == ' ' || c == '\t' || c == '\r' || c == '\v' || c == '\n');
 }
 
 static void	which_other_tokens(struct s_tokens **head, char const *line,
