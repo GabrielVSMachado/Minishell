@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/17 12:52:00 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/04/09 16:00:15 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/04/09 16:12:07 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,7 @@ static void	exec_child(struct s_program *programs, struct s_exec *exec)
 
 	setup_signal(SIGQUIT, SIG_DFL);
 	setup_signal(SIGINT, SIG_DFL);
+	clear_history();
 	exit_code = 0;
 	if (exec->fdin != -1)
 		close(exec->fdin);
@@ -98,7 +99,6 @@ static void	exec_child(struct s_program *programs, struct s_exec *exec)
 	else
 		clear_memory(&exec->fstprg, NULL, NULL);
 	destroy_hashtbl();
-	clear_history();
 	exit(exit_code);
 }
 
