@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/11 19:59:48 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/04/07 00:24:49 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/04/09 16:05:17 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,8 @@ static void	expand_program(struct s_program *programs)
 	struct s_list		*tmp;
 	struct s_io			*content;
 
-	expand_command(&programs->name);
+	if (programs->name)
+		expand_command(&programs->name);
 	tmp = programs->r_io;
 	while (tmp)
 	{

@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/28 19:13:13 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/04/07 12:12:22 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/04/09 16:07:37 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@
 
 int	is_builtin(struct s_program *program)
 {
+	if (!program->name)
+		return (0);
 	if (NOT ft_strcmp("echo", program->name))
 		program->builtin_code = ECHO;
 	else if (NOT ft_strcmp("cd", program->name))
