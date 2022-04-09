@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/28 16:35:20 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/04/07 00:33:21 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/04/09 16:21:41 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ int	echo(struct s_list *params)
 		}
 		else
 		{
-			while (NOT ft_strcmp(params->content, "-n"))
+			while (params && NOT ft_strcmp(params->content, "-n"))
 				params = params->next;
 			to_print = join_params(params);
 			ft_putstr_fd(to_print, STDOUT_FILENO);
