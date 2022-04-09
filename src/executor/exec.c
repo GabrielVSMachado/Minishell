@@ -6,12 +6,13 @@
 /*   By: gvitor-s <gvitor-s>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/17 12:52:00 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/04/07 00:20:51 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/04/09 16:00:15 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdio.h>
 #include "signals.h"
+#include <readline/history.h>
 #include "error.h"
 #include "parsing.h"
 #include "minishell.h"
@@ -97,6 +98,7 @@ static void	exec_child(struct s_program *programs, struct s_exec *exec)
 	else
 		clear_memory(&exec->fstprg, NULL, NULL);
 	destroy_hashtbl();
+	clear_history();
 	exit(exit_code);
 }
 
