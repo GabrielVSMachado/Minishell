@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/23 20:41:00 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/04/07 00:25:56 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/04/09 15:56:05 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,20 +26,23 @@ static void	exec_commands(struct s_program **programs)
 {
 	struct s_exec	exc;
 
-	if (exec_heredocs(*programs) == -1)
-		return ;
-	expand_all(*programs);
-	if (NOT (*programs)->next && is_builtin(*programs))
+	if (programs)
 	{
-		exc.fstprg = *programs;
-		exc.tmpin = dup(STDIN_FILENO);
-		exc.tmpout = dup(STDOUT_FILENO);
-		exc.fdin = -1;
-		exc.fdout = -1;
-		insert_ext_code(exec_builtin_parent(*programs, &exc));
+		if (exec_heredocs(*programs) == -1)
+			return ;
+		expand_all(*programs);
+		if (NOT (*programs)->next && is_builtin(*programs))
+		{
+			exc.fstprg = *programs;
+			exc.tmpin = dup(STDIN_FILENO);
+			exc.tmpout = dup(STDOUT_FILENO);
+			exc.fdin = -1;
+			exc.fdout = -1;
+			insert_ext_code(exec_builtin_parent(*programs, &exc));
+		}
+		else
+			exec_pipeline(*programs);
 	}
-	else
-		exec_pipeline(*programs);
 }
 
 static int	check_append_commands(char **line)
@@ -81,8 +84,7 @@ int	main(void)
 		free(line);
 		programs = parsing(tokens);
 		clear_tokens(&tokens);
-		if (programs)
-			exec_commands(&programs);
+		exec_commands(&programs);
 		destroy_programs(&programs);
 	}
 }
