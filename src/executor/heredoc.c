@@ -6,7 +6,7 @@
 /*   By: gvitor-s <gvitor-s>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/19 13:19:30 by gvitor-s          #+#    #+#             */
-/*   Updated: 2022/04/03 20:57:32 by gvitor-s         ###   ########.fr       */
+/*   Updated: 2022/04/09 16:13:56 by gvitor-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include <signal.h>
 #include <stdio.h>
 #include <readline/readline.h>
+#include <readline/history.h>
 #include <sys/wait.h>
 #include <unistd.h>
 #include <errno.h>
@@ -63,6 +64,7 @@ static int	exec_child_heredoc(struct s_program *programs,
 	pid = fork();
 	if (pid == 0)
 	{
+		clear_history();
 		handler_heredoc(0, tmp_programs);
 		handler = &handler_heredoc;
 		setup_signal(SIGINT, (__sighandler_t)handler);
